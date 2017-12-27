@@ -101,7 +101,7 @@ Task "Generate-Packages" -alias "pack" -description "This task generates the app
 	if (Test-Path $ArtifactsDir) { Remove-Item $ArtifactsDir -Recurse -Force; }
 	New-Item $ArtifactsDir -ItemType Directory | Out-Null;
 
-	$csproj = Get-Item "$RootDir\src\Glob\*.csproj";
+	$csproj = Get-Item "$RootDir\src\GlobN\*.csproj";
 	Write-LineBreak "dotnet: pack '$($csproj.Name)'";
 	$version = Get-BuildboxManifest $ManifestJson | Get-VersionNumber $Branch;
 	Exec { &dotnet pack $csproj.FullName --output $ArtifactsDir --configuration $Configuration /p:PackageVersion=$version; }

@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Glob", "src\Glob\Glob.csproj", "{59109623-C66D-4AEE-A2AB-DDAC28152C2D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GlobN", "src\GlobN\GlobN.csproj", "{59109623-C66D-4AEE-A2AB-DDAC28152C2D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Glob.MSTest", "tests\Glob.MSTest\Glob.MSTest.csproj", "{A4B4B634-6684-428C-AE94-C2321D686FC5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GlobN.MSTest", "tests\GlobN.MSTest\GlobN.MSTest.csproj", "{A4B4B634-6684-428C-AE94-C2321D686FC5}"
 EndProject
 Project("{F5034706-568F-408A-B7B3-4D38C6DB8A32}") = "build", "build\build.pssproj", "{6CAFC0C6-A428-4D30-A9F9-700E829FEA51}"
 EndProject

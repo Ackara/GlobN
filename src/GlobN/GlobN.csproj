@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Acklann.Glob</AssemblyName>
-    <RootNamespace>Acklann.Glob</RootNamespace>
+    <AssemblyName>Acklann.GlobN</AssemblyName>
+    <RootNamespace>Acklann.GlobN</RootNamespace>
   </PropertyGroup>
 
 </Project>
