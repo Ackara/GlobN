@@ -9,7 +9,7 @@
   "description": "A useful description.",
   "authors": "Ackara",
   "owner": "Ackara",
-  "tags": "glob file pattern matching",
+  "tags": "glob minimatch file pattern matching",
   "copyright": "All Rights Reserved.",
   "iconUri": null,
   "licenseUri": null,

@@ -48,14 +48,16 @@ bool success = glob.IsMatch(@"%TEMP%\file.txt"); // supports environment variabl
 
 | Pattern | Description                                                                                      |
 |---------|--------------------------------------------------------------------------------------------------|
-| ..      | Moves the selected directory up one folder. **Only applicable at the beginning of the pattern**. |
+| ..      | Moves the current directory up one folder. **Only applicable at the beginning of the pattern**.  |
+| ?       | Match a single character.                                                                        |
 | *       | Match zero or more characters excluding the directory separator.                                 |
 | **      | Match zero or more directories.                                                                  |
+| [abc]   | Match one character within the brackets. (**NO RANGES**).                                        |
 
 ### Where can I get it
-**GlobN** is available at [nuget.org](https://www.nuget.org/packages/Acklann.Glob).
+**GlobN** is available at [nuget.org](https://www.nuget.org/packages/Acklann.GlobN).
 
-`PM> Install-Package Acklann.Glob`
+`PM> Install-Package Acklann.GlobN`
 
-`PS> dotnet add Acklann.Glob`
+`PS> dotnet add Acklann.GlobN`
 
