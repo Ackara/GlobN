@@ -10,7 +10,7 @@
 
         public static readonly Result PatternMatchComplete = new Result(true, true);
         public static readonly Result PatterMatchFailed = new Result(false, false);
-        public static readonly Result Continue = new Result(true, null);
+        public static readonly Result MoveForward = new Result(true, null);
 
         public readonly bool ContinuePatternMatching;
         public readonly bool? PatternIsMatch;

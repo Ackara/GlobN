@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <AssemblyName>GlobN.Benchmark</AssemblyName>
+    <RootNamespace>Acklann.GlobN</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="benchmarkdotnet" Version="0.10.11" />
+    <PackageReference Include="dotnet.glob" Version="1.6.9" />
+    <PackageReference Include="glob" Version="0.4.0" />
+    <PackageReference Include="microsoft.extensions.filesystemglobbing" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\GlobN\GlobN.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -10,8 +10,4 @@
     <DocumentationFile>bin\Release\netstandard2.0\Acklann.GlobN.xml</DocumentationFile>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="Exceptions\" />
-  </ItemGroup>
-
 </Project>

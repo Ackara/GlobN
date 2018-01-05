@@ -6,31 +6,50 @@ namespace Acklann.GlobN.Tests
     [TestClass]
     public class GlobTest
     {
-        // Plain Text <Default State>
+        [TestMethod]
+        public void Can_determine_equality()
+        {
+            var s = "a";
+            var a = new Glob("a");
+            var b = new Glob("b");
+            var c = new Glob("a");
+            Glob n = null;
 
-        [DataTestMethod]
+            (s == a).ShouldBeTrue();
+            (a == c).ShouldBeTrue();
+            (a != b).ShouldBeTrue();
+            (a == b).ShouldBeFalse();
+            (n == null).ShouldBeTrue();
+            a.Equals(b).ShouldBeFalse();
+            a.Equals("a").ShouldBeTrue();
+            (a == null).ShouldBeFalse();
+            a.GetHashCode().ShouldBe(c.GetHashCode());
+        }
+
+        // Plain Text <DefaultState>
+
+        [DataTestMethod, TestCategory("Plain-Text")]
         [DataRow(@"C:\folder\file.txt", "")]
         [DataRow("C:/folder/file.txt", "file.txt")]
         [DataRow("C:/folder/file.txt", "folder/file.txt")]
-        [DataRow("C:/folder/file.txt", "C:\\folder/file.txt")]
         public void IsMatch_should_accept_a_plain_text_pattern(string filePath, string pattern)
         {
             RunIsMatchTest(pattern, filePath, shouldBe: true);
         }
 
-        [DataTestMethod]
+        [DataTestMethod, TestCategory("Plain-Text")]
         [DataRow(@"C:/folder/file.txt", "folder")]
+        [DataRow("/rroot/file.txt", "root/file.txt")]
         [DataRow(@"C:/folder/file01.txt", "file.txt")]
         [DataRow(@"C:/folder/big_file.txt", "file.txt")]
-        [DataRow("/rroot/file.txt", "root/file.txt")]
         public void IsMatch_should_reject_a_plain_text_pattern(string filePath, string pattern)
         {
             RunIsMatchTest(pattern, filePath, shouldBe: false);
         }
 
-        // Dot (.) <Default State>
+        // Dot Operators (.) <DefaultState>
 
-        [DataTestMethod]
+        [DataTestMethod, TestCategory("Plain-Text")]
         [DataRow(@"C:/folder/file.txt", "./file.txt")]
         [DataRow(@"C:/folder/file.txt", "../file.txt")]
         [DataRow(@"C:/folder/file.txt", @"..\..\file.txt")]
@@ -39,120 +58,121 @@ namespace Acklann.GlobN.Tests
             RunIsMatchTest(pattern, filePath, shouldBe: true);
         }
 
-        // Asterisk (*) <WildcardState>
+        // Negate Operators (!) <DefaultState>
 
-        [DataTestMethod]
+        [DataTestMethod, TestCategory("Negate")]
+        [DataRow(@"C:/folder/file.txt", "file.xml")]
+        [DataRow(@"C:/folder/file.txt", "!file.txt")]
+        public void IsMatch_should_accept_a_negate_pattern(string filePath, string pattern)
+        {
+            RunIsMatchTest(pattern, filePath, shouldBe: false);
+        }
+
+        // Wildcard (*) <WildcardState>
+
+        [DataTestMethod, TestCategory("Wildcard '*'")]
         [DataRow(@"C:\folder\file.txt", "*")]
+        [DataRow(@"C:\folder\file.txt", "*.*")]
+        [DataRow(@"C:\folder\file.txt", "*/*.*")]
         [DataRow(@"C:\folder\file.txt", "*.txt")]
         [DataRow(@"C:\folder\file.txt", "file.*")]
         [DataRow(@"/folder/file.txt", "*/file.txt")]
+        [DataRow(@"C:\folder\file.txt", "file*.txt")]
         [DataRow(@"C:\folder\file01.txt", "file*.txt")]
         [DataRow(@"/folder/file.txt", "*/f*i*l*e*tx*")]
+        [DataRow(@"C:\folder\file01.txt", "*file*.txt")]
+        [DataRow(@"C:\root\folder\file.txt", "*/*/*.*")]
         [DataRow(@"C:\folder\sub\file.txt", "folder/*/*.*")]
         [DataRow("/folder/sub/file.txt", "folder/*/file.txt")]
         [DataRow(@"C:\folder\sub\file.txt", "folder/*u*/file.txt")]
+        [DataRow(@"C:\folder\sub\file.txt", @"C:\*folder\sub\file.txt")]
         public void IsMatch_should_accept_a_wildcard_pattern(string filePath, string pattern)
         {
             RunIsMatchTest(pattern, filePath, shouldBe: true);
         }
 
-        [DataTestMethod]
+        [DataTestMethod, TestCategory("Wildcard '*'")]
+        [DataRow(@"/file.txt", "*/*.*")]
         [DataRow(@"/file.txt", "*/file.txt")]
+        [DataRow(@"\root\aaa\file.txt", "**")]
+        [DataRow(@"C:/file.txt", "*/file.txt")]
+        [DataRow(@"C:\folder\file.txt", "*/*/*.*")]
         [DataRow(@"C:\folder\image.txt", "img*.txt")]
+        [DataRow(@"\root\aaa\file.txt", "roo*/file.txt")]
+        [DataRow(@"\root\aaa\file.txt", "ro**/file.txt")]
+        [DataRow("/folder/sub/file.txt", "forlder/sub/fi**le.txt")]
         public void IsMatch_should_reject_a_wildcard_pattern(string filePath, string pattern)
         {
             RunIsMatchTest(pattern, filePath, shouldBe: false);
         }
 
-        // Double-Asterisk (**) <DirectoryWildcardState>
+        // Directory-Wildcard (**) <DirectoryWildcardState>
 
-        [DataTestMethod]
+        [DataTestMethod, TestCategory("Directory-Wildcard '**'")]
+        [DataRow(@"/file.txt", "**/file.txt")]
         [DataRow(@"C:/file.txt", "**/file.txt")]
-        [DataRow("ab/sub/file.txt", "**/sub/file.txt")]
-        [DataRow(@"C:\root\sub\file.txt", "**/file.txt")]
-        [DataRow(@"\root\root\file.txt", "root/**/file.txt")]
-        [DataRow(@"C:\root\sub\root\file.txt", "root/**/**/file.txt")]
+        [DataRow(@"/file.txt", "**/**/file.txt")]
+        [DataRow(@"\root\folder\sub\file.txt", "root/**/file.txt")]
+        [DataRow(@"\root\folder\sub\context\file.txt", "root/**/sub/**/file.txt")]
         public void IsMatch_should_accept_a_directory_wildcard_pattern(string filePath, string pattern)
         {
             RunIsMatchTest(pattern, filePath, shouldBe: true);
         }
 
-        [DataTestMethod]
-        [DataRow(@"/file.txt", "**/file.txt")]
-        [DataRow("/root/file.txt", "root/**/**/file.txt")]
-        [DataRow(@"C:\root\file.txt", "root/**/file.txt")]
-        [DataRow(@"\root\root\file.txt", "root/**/**/file.txt")]
+        [DataTestMethod, TestCategory("Directory-Wildcard '**'")]
+        [DataRow("/folder/sub/file.txt", "folder/***/file.txt")]
+        [DataRow(@"C:\root\folder\sub\file.txt", "folder/**/**")]
+        [DataRow(@"C:\root\folder\sub\file.txt", "foot/**/file.**")]
         [DataRow(@"C:\root\folder\sub\file.txt", "foot/**/file.txt")]
+        [DataRow(@"C:\root\folder\sub\file.txt", "foot/***/file.txt")]
+        [DataRow(@"C:\root\folder\sub\file.txt", "foot/**/**/file.txt")]
         public void IsMatch_should_reject_a_directory_wildcard_pattern(string filePath, string pattern)
         {
             RunIsMatchTest(pattern, filePath, shouldBe: false);
         }
 
-        // Question-Mark <CharacterWildcardState>
+        // Character-Wildcard (?) <CharacterWildcardState>
 
-        [DataTestMethod]
-        [DataRow(@"C:/folder/file.txt", "file1?.txt")]
-        [DataRow(@"C:/folder/file1.txt", "file1?.txt")]
-        [DataRow(@"C:/root/folder/f.txt", "fi?l?e?1?.txt")]
+        [DataTestMethod, TestCategory("Character-Wildcard '?'")]
+        [DataRow(@"C:/folder/file.txt", "file.???")]
+        [DataRow(@"C:/folder/file1.txt", "file?.txt")]
         public void IsMatch_should_accept_a_character_wildcard_pattern(string filePath, string pattern)
         {
             RunIsMatchTest(pattern, filePath, shouldBe: true);
         }
 
-        [DataTestMethod]
-        [DataRow(@"C:/folder/file2.txt", "file1?.txt")]
+        [DataTestMethod, TestCategory("Character-Wildcard '?'")]
+        [DataRow(@"C:/folder/file.txt", "file?.txt")]
+        [DataRow(@"C:/folder/file.jpeg", "file?.???")]
         public void IsMatch_should_reject_a_character_wildcard_pattern(string filePath, string pattern)
-        {
-            RunIsMatchTest(pattern, filePath, shouldBe: false);
-        }
-
-        // Character-Set [abc]
-
-        [DataTestMethod]
-        [DataRow(@"C:\root\folder\sub\fileA.txt", "file[AaBc].txt")]
-        [DataRow(@"C:\root\folder\f3\file.txt", "f[135]/file.txt")]
-        public void IsMatch_should_accept_a_charset_pattern(string filePath, string pattern)
-        {
-            RunIsMatchTest(pattern, filePath, shouldBe: true);
-        }
-
-        [DataTestMethod]
-        [DataRow(@"C:\root\folder\sub\fileA.txt", "file[abc].txt")]
-        [DataRow(@"C:\root\folder\f3\file.txt", "f[246]/file.txt")]
-        public void IsMatch_should_reject_a_charset_pattern(string filePath, string pattern)
         {
             RunIsMatchTest(pattern, filePath, shouldBe: false);
         }
 
         // Wild-card Combinations <Multiple-States>
 
-        [DataTestMethod]
-        //[DataRow(@"C:\root\folder\sub\file.txt", "folder/")]
-        //[DataRow(@"C:\root\folder\sub\file.txt", "folder/**/*")]
-        //[DataRow(@"C:\root\folder\sub\file.txt", @"root\*\**\file.txt")]
-        //[DataRow(@"C:\root\folder\sub\file.txt", @"root\f*\**\file.txt")]
-        [DataRow(@"C:\root\folder\sub\file.txt", @"roo*\*f*\**\file.txt")]
+        [DataTestMethod, TestCategory("Combinations")]
+        [DataRow(@"C:\root\folder\file.txt", "folder/")]
+        [DataRow(@"C:\root\folder\sub\file.txt", "folder/")]
+        [DataRow(@"C:\root\folder\sub\file.txt", @"root\*\**\file.txt")]
+        [DataRow(@"C:\root\folder\sub\file.txt", @"root\**\*\file.txt")]
+        [DataRow(@"C:\root\folder\sub\file.txt", @"root\f*\**\file.txt")]
+        [DataRow(@"C:\root\folder\sub\file.txt", @"r?o*\*f*\**\file.???")]
+        [DataRow(@"C:\root\folder\sub\file.txt", @"roo*\folde?\**\file.txt")]
         public void IsMatch_should_accept_a_wildcard_combinations(string filePath, string pattern)
         {
             RunIsMatchTest(pattern, filePath, shouldBe: true);
         }
 
-        [DataTestMethod]
-        //[DataRow(@"C:\root\app_folder\sub\file.txt", "folder\\")]
-        //[DataRow(@"C:\root\folder\file.txt", @"root\*\**\file.txt")]
-        //[DataRow(@"C:\root\bolder\sub\file.txt", @"root\f*\**\file.txt")]
+        [DataTestMethod, TestCategory("Combinations")]
+        [DataRow(@"C:\root\file.txt", "root/**/*/file.txt")]
+        [DataRow(@"C:\root\app_folder\sub\file.txt", "folder\\")]
+        [DataRow(@"C:\root\folder\sub\file.txt", @"sub\*\**\file.txt")]
+        [DataRow(@"C:\root\folder\sub\file.txt", @"sub\**\*\file.txt")]
+        [DataRow(@"C:\root\bolder\sub\file.txt", @"root\f*\**\file.txt")]
+        [DataRow(@"C:\root\folder\sub\file.txt", @"roo*\foldg?\**\file.txt")]
+        [DataRow(@"C:\root\folder\sub\file.txt", @"!roo*\folde?\**\file.txt")]
         public void IsMatch_should_reject_a_wildcard_combinations(string filePath, string pattern)
-        {
-            RunIsMatchTest(pattern, filePath, shouldBe: false);
-        }
-
-        // Exceptions (Illegal Patterns)
-
-        [DataTestMethod]
-        [DataRow(@"C:\root\folder\sub\file.txt", "folder/**/**")]
-        [DataRow("/folder/sub/file.txt", "forlder/***/file.txt")]
-        [DataRow("/folder/sub/file.txt", "forlder/sub/fi**le.txt")]
-        public void IsMatch_should_reject_illegal_patterns(string filePath, string pattern)
         {
             RunIsMatchTest(pattern, filePath, shouldBe: false);
         }

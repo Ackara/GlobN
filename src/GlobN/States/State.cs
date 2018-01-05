@@ -22,6 +22,8 @@ namespace Acklann.GlobN.States
             get { return Context.P == 0; }
         }
 
+        public bool Negate { get; set; }
+
         public virtual void Step()
         {
             if (Context.P > 0) Context.P--;
@@ -30,12 +32,11 @@ namespace Acklann.GlobN.States
 
         public virtual void Change(char p)
         {
-            Type nextState = GetNextState(p);
-            if (nextState != Context.State.GetType())
-            {
-                Context.State = (State)Activator.CreateInstance(nextState, Context);
-            }
+            Type nextState = GetState(p);
+            Context.State = (State)Activator.CreateInstance(nextState, Context);
         }
+
+        public abstract void Initialize(Glob context);
 
         public abstract Result Evaluate(char p, char v);
 
@@ -49,7 +50,7 @@ namespace Acklann.GlobN.States
 
         // ----- HELPER METHODS -----
 
-        internal virtual Type GetNextState(char p)
+        internal Type GetState(char p)
         {
             Type nextState;
             switch (p)
@@ -61,6 +62,7 @@ namespace Acklann.GlobN.States
                 case '*':
                     if (CharAt(position: -1) == '*')
                     {
+                        Context.P--;
                         nextState = typeof(DirectoryWildcardState);
                     }
                     else
@@ -68,8 +70,24 @@ namespace Acklann.GlobN.States
                         nextState = typeof(WildcardState);
                     }
                     break;
+
+                case '?':
+                    nextState = typeof(CharacterWildcard);
+                    break;
             }
             return nextState;
+        }
+
+        internal bool TryFastForwardingTo(char v)
+        {
+            bool charactersAreNotEqual;
+            do
+            {
+                Context.V--;
+                charactersAreNotEqual = EquateCharacters(Context.Value[Context.V], v) == false;
+            } while (charactersAreNotEqual && Context.V != 0);
+
+            return charactersAreNotEqual == false;
         }
 
         internal char CharAt(int position, bool useValue = false)
@@ -83,18 +101,6 @@ namespace Acklann.GlobN.States
             }
 
             return NULL_CHAR;
-        }
-
-        internal bool TryMovingToChar(char v)
-        {
-            bool charactersAreNotEqual;
-            do
-            {
-                Context.V--;
-                charactersAreNotEqual = EquateCharacters(Context.Value[Context.V], v) == false;
-            } while (charactersAreNotEqual && Context.V != 0);
-
-            return charactersAreNotEqual == false;
         }
     }
 }

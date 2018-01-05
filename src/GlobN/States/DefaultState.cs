@@ -6,14 +6,19 @@
         {
         }
 
+        public override void Initialize(Glob context)
+        {
+            Context = context;
+        }
+
         public override Result Evaluate(char p, char v)
         {
-            bool continuePatternMatching = EquateCharacters(p, v);
+            bool charactersAreEqual = EquateCharacters(p, v);
 
             if (Context.PatternIsIllegal) return Result.PatterMatchFailed;
-            else if (continuePatternMatching && AtEndOfPattern) return Result.PatternMatchComplete;
             else if (AtEndOfValue && !AtEndOfPattern) return Result.PatterMatchFailed;
-            else return new Result(continuePatternMatching, null);
+            else if (charactersAreEqual && (AtEndOfPattern || p == ':')) return Result.PatternMatchComplete;
+            else return new Result(charactersAreEqual, null);
         }
     }
 }

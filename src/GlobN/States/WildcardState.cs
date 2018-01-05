@@ -1,51 +1,54 @@
 ﻿namespace Acklann.GlobN.States
 {
-    internal class WildcardState : WildcardBase
+    internal class WildcardState : DefaultState
     {
         public WildcardState(Glob context) : base(context)
         {
-            _wildcardNotSatisfied = true;
-            ExitChar = CharAt(position: -1);
-
-            if (ExitChar.IsWildcard())
-            {
-                System.Diagnostics.Debug.WriteLine($"Cannot use a wildcard (*) immediateley after another.");
-                context.PatternIsIllegal = true;
-            }
+            Initialize(context);
         }
 
-        private bool _wildcardNotSatisfied;
-
-        public override Result Evaluate(char p, char v)
+        public override void Initialize(Glob context)
         {
-            if (Context.PatternIsIllegal) return Result.PatterMatchFailed;
-            else if (base.EquateCharacters(ExitChar, v) == true)
+            Context = context;
+            _notSatisfied = true;
+            _exitChar = CharAt(position: -1);
+
+            if (_exitChar == '*' || _exitChar == '?')
             {
-                Context.P--;
-                Context.State.Change(ExitChar);
-                return Context.State.Evaluate(ExitChar, v);
+                context.PatternIsIllegal = true;
+                string error = context.FormatError($"The '{_exitChar}:{context.P - 1}' character cannot preceed the wildcard character ('*' {context.P}) ");
+                if (context.ThrowIfInvalid) throw new Exceptions.IllegalGlobException(error);
             }
-            else if (AtEndOfValue && !AtEndOfPattern) return Result.PatterMatchFailed;
-            else if (AtEndOfValue) return Result.PatternMatchComplete;
-            else return Result.Continue;
         }
 
         public override bool EquateCharacters(char p, char v)
         {
-            if (v == ExitChar)
+            if (_notSatisfied && base.EquateCharacters(_exitChar, v) == true)
             {
-                _wildcardNotSatisfied = false;
+                _notSatisfied = false;
                 Context.P--;
                 return true;
             }
-            else if (_wildcardNotSatisfied && p == '*') return true;
+            else if (_notSatisfied && v.IsDirectorySeparator())
+            {
+                _notSatisfied = false;
+                return false;
+            }
+            else if (_notSatisfied) return true;
             else return base.EquateCharacters(p, v);
         }
 
         public override void Step()
         {
-            if (_wildcardNotSatisfied) Context.V--;
+            if (_notSatisfied) Context.V--;
             else base.Step();
         }
+
+        #region Private Members
+
+        private char _exitChar;
+        private bool _notSatisfied;
+
+        #endregion Private Members
     }
 }
