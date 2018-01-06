@@ -2,8 +2,13 @@
 {
     internal class DefaultState : State
     {
-        public DefaultState(Glob context) : base(context)
+        protected DefaultState()
         {
+        }
+
+        public static DefaultState Instance
+        {
+            get { return Nested._instance; }
         }
 
         public override void Initialize(Glob context)
@@ -19,6 +24,15 @@
             else if (AtEndOfValue && !AtEndOfPattern) return Result.PatterMatchFailed;
             else if (charactersAreEqual && (AtEndOfPattern || p == ':')) return Result.PatternMatchComplete;
             else return new Result(charactersAreEqual, null);
+        }
+
+        private class Nested
+        {
+            static Nested()
+            {
+            }
+
+            internal static readonly DefaultState _instance = new DefaultState();
         }
     }
 }

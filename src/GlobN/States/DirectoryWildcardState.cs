@@ -1,18 +1,16 @@
-﻿using System;
-
-namespace Acklann.GlobN.States
+﻿namespace Acklann.GlobN.States
 {
     internal class DirectoryWildcardState : State
     {
-        public DirectoryWildcardState(Glob context) : base(context)
-        {
-            Initialize(context);
-        }
-
         private State _surrogate;
 
         private bool _satisfied;
         private int _resetPoint, _segmentsTraversed = 0, _segmentsToBeTraversed = 1;
+
+        public static DirectoryWildcardState Instance
+        {
+            get { return Nested._instance; }
+        }
 
         public bool TraversedAllSegments
         {
@@ -22,24 +20,28 @@ namespace Acklann.GlobN.States
         public override void Initialize(Glob context)
         {
             Context = context;
+            _satisfied = false;
+            _segmentsToBeTraversed = 1;
+            _resetPoint = _segmentsTraversed = 0;
             if ((CharAt(position: -1).IsDirectorySeparator() && CharAt(position: +2).IsDirectorySeparator()) == false)
             {
                 context.PatternIsIllegal = true;
-                _surrogate = new DefaultState(context);
+                _surrogate = DefaultState.Instance;
+                _surrogate.Initialize(Context);
                 string error = context.FormatError($"The directory-wildcard (**) must be between directory separators (example: root/**/folder)");
                 if (context.ThrowIfInvalid) throw new Exceptions.IllegalGlobException(error);
             }
             else
             {
                 FastForward();
-                _surrogate = (State)Activator.CreateInstance(GetState(context.Pattern[context.P]), context);
+                _surrogate = GetState(Context.Pattern[Context.P]);
             }
         }
 
         public override void Change(char p)
         {
             if (_satisfied) base.Change(p);
-            else _surrogate = (State)Activator.CreateInstance(GetState(p), Context);
+            else _surrogate = GetState(p);
         }
 
         public override Result Evaluate(char p, char v)
@@ -90,6 +92,15 @@ namespace Acklann.GlobN.States
             } while (!AtEndOfPattern && (cur == '*' || cur.IsDirectorySeparator()));
             Context.P = prev == '*' ? Context.P + 1 : Context.P;
             _resetPoint = Context.P + 1;
+        }
+
+        private class Nested
+        {
+            static Nested()
+            {
+            }
+
+            internal static readonly DirectoryWildcardState _instance = new DirectoryWildcardState();
         }
     }
 }

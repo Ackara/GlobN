@@ -39,7 +39,7 @@ namespace Acklann.GlobN
         /// Expands the name of each environment variable (%variable%) and 'up directory' expression ('..\') embedded in the <see cref="Glob" />.
         /// </summary>
         /// <param name="pattern">The glob pattern.</param>
-        /// <param name="directory">The current directory.</param>
+        /// <param name="directory">The current directory (default: <see cref="Environment.CurrentDirectory"/>).</param>
         /// <param name="expandVariables">if set to <c>true</c> expands the environment variables within the <paramref name="pattern" /> and <paramref name="directory" />.</param>
         /// <returns>A string with each variable replaced by its value.</returns>
         public static string ExpandPath(this Glob pattern, string directory = null, bool expandVariables = true)
@@ -129,7 +129,7 @@ namespace Acklann.GlobN
         /// Expands the name of each environment variable (%variable%) and 'up directory' expression ('..\') embedded in the <see cref="Glob" />.
         /// </summary>
         /// <param name="relativePath">The relative path.</param>
-        /// <param name="directory">The current directory.</param>
+        /// <param name="directory">The current directory (default: <see cref="Environment.CurrentDirectory"/>).</param>
         /// <param name="expandVariables">if set to <c>true</c> expands the environment variables within the <paramref name="relativePath" /> and <paramref name="directory" />.</param>
         /// <returns>A string with each variable replaced by its value.</returns>
         public static string ExpandPath(this string relativePath, string directory = null, bool expandVariables = true)

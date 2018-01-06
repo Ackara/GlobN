@@ -30,7 +30,6 @@ namespace Acklann.GlobN
         public Glob(string pattern, bool throwIfInvalid)
         {
             _pattern = pattern ?? throw new System.ArgumentNullException(nameof(pattern));
-            State = new DefaultState(this);
             ThrowIfInvalid = throwIfInvalid;
         }
 
@@ -56,6 +55,17 @@ namespace Acklann.GlobN
         internal string Value { get; private set; }
 
         /// <summary>
+        /// Indicates whether the specified glob expression finds a match in the specified path.
+        /// </summary>
+        /// <param name="path">The file path.</param>
+        /// <param name="pattern">The glob pattern.</param>
+        /// <returns><c>true</c> if the specified path match the pattern; otherwise, <c>false</c>.</returns>
+        public static bool IsMatch(string path, string pattern)
+        {
+            return new Glob(pattern).IsMatch(path);
+        }
+
+        /// <summary>
         /// Determines whether the specified path matches this expression.
         /// </summary>
         /// <param name="absolutePath">The absolute file path.</param>
@@ -68,6 +78,9 @@ namespace Acklann.GlobN
             else if (string.IsNullOrEmpty(absolutePath) || PatternIsIllegal) return false;
 
             // Initializing the glob's state
+            State = DefaultState.Instance;
+            State.Initialize(this);
+
             Value = absolutePath;
             V = (Value.Length - 1);
 

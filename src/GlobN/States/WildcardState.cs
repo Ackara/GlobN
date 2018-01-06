@@ -2,9 +2,9 @@
 {
     internal class WildcardState : DefaultState
     {
-        public WildcardState(Glob context) : base(context)
+        public new static WildcardState Instance
         {
-            Initialize(context);
+            get { return Nested._instance; }
         }
 
         public override void Initialize(Glob context)
@@ -48,6 +48,15 @@
 
         private char _exitChar;
         private bool _notSatisfied;
+
+        private class Nested
+        {
+            static Nested()
+            {
+            }
+
+            internal static readonly WildcardState _instance = new WildcardState();
+        }
 
         #endregion Private Members
     }

@@ -1,14 +1,7 @@
-﻿using System;
-
-namespace Acklann.GlobN.States
+﻿namespace Acklann.GlobN.States
 {
     internal abstract class State
     {
-        public State(Glob context)
-        {
-            Context = context;
-        }
-
         public const char NULL_CHAR = '\0';
         public Glob Context;
 
@@ -22,8 +15,6 @@ namespace Acklann.GlobN.States
             get { return Context.P == 0; }
         }
 
-        public bool Negate { get; set; }
-
         public virtual void Step()
         {
             if (Context.P > 0) Context.P--;
@@ -32,8 +23,7 @@ namespace Acklann.GlobN.States
 
         public virtual void Change(char p)
         {
-            Type nextState = GetState(p);
-            Context.State = (State)Activator.CreateInstance(nextState, Context);
+            Context.State = GetState(p);
         }
 
         public abstract void Initialize(Glob context);
@@ -50,31 +40,33 @@ namespace Acklann.GlobN.States
 
         // ----- HELPER METHODS -----
 
-        internal Type GetState(char p)
+        internal State GetState(char p)
         {
-            Type nextState;
+            State nextState;
             switch (p)
             {
                 default:
-                    nextState = typeof(DefaultState);
+                    nextState = DefaultState.Instance;
                     break;
 
                 case '*':
                     if (CharAt(position: -1) == '*')
                     {
                         Context.P--;
-                        nextState = typeof(DirectoryWildcardState);
+                        nextState = DirectoryWildcardState.Instance;
                     }
                     else
                     {
-                        nextState = typeof(WildcardState);
+                        nextState = WildcardState.Instance;
                     }
                     break;
 
                 case '?':
-                    nextState = typeof(CharacterWildcard);
+                    nextState = CharacterWildcard.Instance;
                     break;
             }
+
+            nextState.Initialize(Context);
             return nextState;
         }
 

@@ -179,8 +179,7 @@ namespace Acklann.GlobN.Tests
 
         private static void RunIsMatchTest(string pattern, string samplePath, bool shouldBe = true)
         {
-            var glob = new Glob(pattern);
-            var result = glob.IsMatch(samplePath);
+            var result = Glob.IsMatch(samplePath, pattern);
             var failureMsg = $"'{pattern}' {(shouldBe ? "SHOULD OF MATCHED" : "SHOULD NOT OF MATCHED")} '{samplePath}'";
 
             if (shouldBe == true) result.ShouldBeTrue(failureMsg); else result.ShouldBeFalse(failureMsg);
