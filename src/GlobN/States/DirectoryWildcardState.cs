@@ -7,11 +7,6 @@
         private bool _satisfied;
         private int _resetPoint, _segmentsTraversed = 0, _segmentsToBeTraversed = 1;
 
-        public static DirectoryWildcardState Instance
-        {
-            get { return Nested._instance; }
-        }
-
         public bool TraversedAllSegments
         {
             get { return _segmentsTraversed >= _segmentsToBeTraversed; }
@@ -26,7 +21,7 @@
             if ((CharAt(position: -1).IsDirectorySeparator() && CharAt(position: +2).IsDirectorySeparator()) == false)
             {
                 context.PatternIsIllegal = true;
-                _surrogate = DefaultState.Instance;
+                _surrogate = new DefaultState();
                 _surrogate.Initialize(Context);
                 string error = context.FormatError($"The directory-wildcard (**) must be between directory separators (example: root/**/folder)");
                 if (context.ThrowIfInvalid) throw new Exceptions.IllegalGlobException(error);
@@ -49,16 +44,15 @@
             if (v.IsDirectorySeparator()) _segmentsTraversed++;
             bool segmentCharsAreEqual = _surrogate.EquateCharacters(p, v);
             _satisfied = !_satisfied ? (segmentCharsAreEqual && v.IsDirectorySeparator() && TraversedAllSegments) : _satisfied;
-
-            if (Context.PatternIsIllegal) return Result.PatterMatchFailed;
-            else if (AtEndOfValue && !AtEndOfPattern) return Result.PatterMatchFailed;
+            
+            if (Context.PatternIsIllegal || (AtEndOfValue && !AtEndOfPattern)) return Result.PatterMatchFailed;
             else if (_satisfied && (AtEndOfPattern || p == ':')) return Result.PatternMatchComplete;
             else if (segmentCharsAreEqual) return Result.MoveForward;
             else
             {
                 Context.P = _resetPoint;
                 if (v.IsDirectorySeparator() == false)
-                    if (TryFastForwardingTo('\\'))
+                    if (TryJumpToNext('\\'))
                     {
                         _segmentsTraversed++;
                     }
@@ -94,13 +88,16 @@
             _resetPoint = Context.P + 1;
         }
 
-        private class Nested
+        public bool TryJumpToNext(char v)
         {
-            static Nested()
+            bool charactersAreNotEqual;
+            do
             {
-            }
+                Context.V--;
+                charactersAreNotEqual = EquateCharacters(Context.Value[Context.V], v) == false;
+            } while (charactersAreNotEqual && Context.V != 0);
 
-            internal static readonly DirectoryWildcardState _instance = new DirectoryWildcardState();
+            return charactersAreNotEqual == false;
         }
     }
 }

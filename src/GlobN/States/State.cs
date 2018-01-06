@@ -17,8 +17,8 @@
 
         public virtual void Step()
         {
-            if (Context.P > 0) Context.P--;
-            if (Context.V > 0) Context.V--;
+            Context.P--;
+            Context.V--;
         }
 
         public virtual void Change(char p)
@@ -46,23 +46,27 @@
             switch (p)
             {
                 default:
-                    nextState = DefaultState.Instance;
+                    if (_default == null) _default = new DefaultState();
+                    nextState = _default;
                     break;
 
                 case '*':
                     if (CharAt(position: -1) == '*')
                     {
                         Context.P--;
-                        nextState = DirectoryWildcardState.Instance;
+                        if (_directoryWildcard == null) _directoryWildcard = new DirectoryWildcardState();
+                        nextState = _directoryWildcard;
                     }
                     else
                     {
-                        nextState = WildcardState.Instance;
+                        if (_wildcard == null) _wildcard = new WildcardState();
+                        nextState = _wildcard;
                     }
                     break;
 
                 case '?':
-                    nextState = CharacterWildcard.Instance;
+                    if (_characterWildcard == null) _characterWildcard = new CharacterWildcard();
+                    nextState = _characterWildcard;
                     break;
             }
 
@@ -70,29 +74,16 @@
             return nextState;
         }
 
-        internal bool TryFastForwardingTo(char v)
+        internal char CharAt(int position)
         {
-            bool charactersAreNotEqual;
-            do
-            {
-                Context.V--;
-                charactersAreNotEqual = EquateCharacters(Context.Value[Context.V], v) == false;
-            } while (charactersAreNotEqual && Context.V != 0);
-
-            return charactersAreNotEqual == false;
+            int index = Context.P + position;
+            return (index >= 0 && index <= (Context.Pattern.Length - 1)) ? Context.Pattern[index] : NULL_CHAR;
         }
 
-        internal char CharAt(int position, bool useValue = false)
-        {
-            string text = useValue ? Context.Value : Context.Pattern;
-            int index = (useValue ? Context.V : Context.P) + position;
+        #region Private Members
 
-            if (index >= 0 && index <= (text.Length - 1))
-            {
-                return text[index];
-            }
+        private State _default, _wildcard, _directoryWildcard, _characterWildcard;
 
-            return NULL_CHAR;
-        }
+        #endregion Private Members
     }
 }

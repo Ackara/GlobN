@@ -78,7 +78,7 @@ namespace Acklann.GlobN
             else if (string.IsNullOrEmpty(absolutePath) || PatternIsIllegal) return false;
 
             // Initializing the glob's state
-            State = DefaultState.Instance;
+            State = new DefaultState();
             State.Initialize(this);
 
             Value = absolutePath;
