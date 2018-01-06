@@ -125,6 +125,34 @@ Task "Publish-NuGetPackages" -alias "push-nuget" -description "This task publish
 	}
 }
 
+Task "Run-Benchmarks" -alias "benchmark" -description "This task runs all project benchmarks." `
+-depends @("restore") -action {
+	$bencharkProj = Get-Item "$RootDir\tests\*\*Benchmark.csproj";
+	$bin = "$($bencharkProj.DirectoryName)\bin\$Configuration";
+
+	try
+	{
+		Write-LineBreak "dotnet: msbuild";
+		Get-ChildItem $bin | Remove-Item -Recurse -Force;
+		Exec { &dotnet msbuild $((Get-Item "$RootDir\*.sln").FullName) /t:Clean,Build /p:Configuration=$Configuration; }
+
+		$exe = Get-ChildItem "$($bencharkProj.DirectoryName)\bin\$Configuration" -Recurse -Filter "*Benchmark.dll" | Select-Object -First 1;
+		Push-Location $exe.DirectoryName;
+		Write-LineBreak "dotnet: run benchmark";
+		Exec { &dotnet $exe.FullName; }
+
+		# Copying benchmark results to report.
+		$reportFile = Get-Item "$($bencharkProj.DirectoryName)\*.md";
+		$summary = Get-Item "$($exe.DirectoryName)\*artifacts*\*\*.md" | Get-Content | Out-String;
+		$report = $reportFile | Get-Content | Out-String;
+		$match = [Regex]::Match($report, '(?i)#+\s+(Summary|Results?|Report)');
+		$report = $report.Substring(0, ($match.Index + $match.Length));
+		"$report`r`n`r`n$summary" | Out-File $reportFile -Encoding utf8;
+		Get-Item "$($exe.DirectoryName)\*artifacts*\*\*.html" | Invoke-Item;
+	}
+	finally { Pop-Location; }
+}
+
 #endregion
 
 #region ----- FUNCTIONS -----

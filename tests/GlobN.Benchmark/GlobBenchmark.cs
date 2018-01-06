@@ -1,23 +1,49 @@
 ﻿using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Attributes.Columns;
 using BenchmarkDotNet.Order;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using G = Glob;
 
-namespace Acklann.GlobN
+namespace Acklann.GlobN.Benchmark
 {
     [OrderProvider(SummaryOrderPolicy.FastestToSlowest)]
-    [RankColumn(BenchmarkDotNet.Mathematics.NumeralSystem.Stars)]
+    [RankColumn(BenchmarkDotNet.Mathematics.NumeralSystem.Roman)]
     public class GlobBenchmark
     {
+        public GlobBenchmark()
+        {
+            var list = new Stack<string>();
+            using (var stream = File.OpenRead("fileList.txt"))
+            {
+                using (var reader = new StreamReader(stream))
+                {
+                    string path;
+                    while (!reader.EndOfStream)
+                    {
+                        path = reader.ReadLine().Trim();
+                        if (!string.IsNullOrEmpty(path)) list.Push(path);
+                    }
+                }
+            }
+
+            FileList = list.ToArray();
+            Globs = Patterns().Select(x => x.Glob).ToArray();
+            RegexExp = Patterns().Select(x => x.Regex).ToArray();
+        }
+
+        public string[] FileList, Globs, RegexExp;
+
         [Benchmark]
         public int GlobN()
         {
             int matches = 0;
-            foreach (var pattern in GetGlobs())
+            foreach (var pattern in Globs)
             {
                 var sut = new GlobN.Glob(pattern);
-                foreach (var path in SamplePaths())
+                foreach (var path in FileList)
                 {
                     if (sut.IsMatch(path)) matches++;
                 }
@@ -26,14 +52,30 @@ namespace Acklann.GlobN
             return matches;
         }
 
-        [Benchmark]
+        [Benchmark(Description = "DotNet.Glob")]
         public int DotNetGlob()
         {
             int matches = 0;
-            foreach (var pattern in GetGlobs())
+            foreach (var pattern in Globs)
             {
                 var sut = DotNet.Globbing.Glob.Parse(pattern);
-                foreach (var path in SamplePaths())
+                foreach (var path in FileList)
+                {
+                    if (sut.IsMatch(path)) matches++;
+                }
+            }
+
+            return matches;
+        }
+
+        [Benchmark(Description = "Glob")]
+        public int GlobGlob()
+        {
+            int matches = 0;
+            foreach (var pattern in Globs)
+            {
+                var sut = new G.Glob(pattern, G.GlobOptions.Compiled);
+                foreach (var path in FileList)
                 {
                     if (sut.IsMatch(path)) matches++;
                 }
@@ -46,10 +88,10 @@ namespace Acklann.GlobN
         public int Regex()
         {
             int matches = 0;
-            foreach (var pattern in GetRegex())
+            foreach (var pattern in RegexExp)
             {
-                var sut = new Regex(pattern);
-                foreach (var path in SamplePaths())
+                var sut = new Regex(pattern, RegexOptions.Compiled);
+                foreach (var path in FileList)
                 {
                     if (sut.IsMatch(path)) matches++;
                 }
@@ -58,23 +100,16 @@ namespace Acklann.GlobN
             return matches;
         }
 
-        private string[] SamplePaths()
-        {
-            return new string[]
-            {
-            };
-        }
-
-        private (string Glob, string Regex)[] Patterns()
+        private static (string Glob, string Regex)[] Patterns()
         {
             return new(string, string)[]
             {
-                ("*.png", @".+\.png")
+                ("**/*", ".+"),
+                ("**/*.png", @".+\.png"),
+                ("**/purus/**/*", "purus/.+"),
+                ("/sed/**/*/felis.html", @"sed/.+/felis\.html"),
+                ("nullam/sit/amet/turpis/elementum/ligula/vehicula.jsp", "nullam/sit/amet/turpis/elementum/ligula/vehicula.jsp")
             };
         }
-
-        private string[] GetGlobs() => Patterns().Select(x => x.Glob).ToArray();
-
-        private string[] GetRegex() => Patterns().Select(x => x.Regex).ToArray();
     }
 }
