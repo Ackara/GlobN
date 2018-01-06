@@ -3,7 +3,7 @@
 ---
 
 ## What is GlobN
-**GlobN** is a file pattern matching library for .NET. Grabbing files as if your on the command-line can never be easier.
+**GlobN** is a file pattern matching library for .NET. Grabbing files from the command-line can never be easier.
 
 ### How it works
 Let say your current directory is as follows.
@@ -23,16 +23,16 @@ Most of the functions you'll be utilizing are extension methods. So lets say you
 
 ```csharp
 string cd = System.Environment.CurrentDirectory;
-IEnumerable<string> all5Files = cd.GlobFiles();
+IEnumerable<string> all5Files = cd.GetFiles();
 ```
 
 Lets say your in the **css folder** and you want to grab all of the `.js` files.
 
 ```csharp
-var oneJsFile = cd.GlobFiles("../js/*.js");
+var siteJs = cd.GetFiles("../js/*.js");
 // return: js\site.js
 
-var allJsFiles cd.GlobFiles(@"..\**\*.js");
+var allJsFiles cd.GetFiles(@"..\**\*.js");
 // return: js\site.js; js\viewModel\view.js
 ```
 
@@ -40,8 +40,10 @@ Finally, here are some other straight forward examples.
 ```csharp
 var filteredList = listOfPaths.Filter("*.js");
 
-var glob = new Acklann.GlobN.Glob("file.txt");
-bool success = glob.IsMatch(@"%TEMP%\file.txt"); // supports environment variables.
+IEnumerable<string> files = @"..\js\*.ts".ResolvePath();
+
+Glob glob = "*.png";
+glob.IsMatch("/site/content/bg.png");
 ```
 
 **Supported Expressions**
@@ -49,15 +51,15 @@ bool success = glob.IsMatch(@"%TEMP%\file.txt"); // supports environment variabl
 | Pattern | Description                                                                                      |
 |---------|--------------------------------------------------------------------------------------------------|
 | ..      | Moves the current directory up one folder. **Only applicable at the beginning of the pattern**.  |
-| ?       | Match a single character.                                                                        |
 | *       | Match zero or more characters excluding the directory separator.                                 |
 | **      | Match zero or more directories.                                                                  |
-| [abc]   | Match one character within the brackets. (**NO RANGES**).                                        |
+| ?       | Match a single character.                                                                        |
+| !       | Negates the matching pattern.                                                                    |
 
 ### Where can I get it
 **GlobN** is available at [nuget.org](https://www.nuget.org/packages/Acklann.GlobN).
 
 `PM> Install-Package Acklann.GlobN`
 
-`PS> dotnet add Acklann.GlobN`
+`PS> dotnet add package Acklann.GlobN`
 
