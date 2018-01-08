@@ -5,8 +5,8 @@
     <RootNamespace>Acklann.GlobN</RootNamespace>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <Product>GlobN</Product>
-    <AssemblyVersion>0.0.6</AssemblyVersion>
-    <PackageVersion>0.0.6</PackageVersion>
+    <AssemblyVersion>1.0.0</AssemblyVersion>
+    <PackageVersion>1.0.0</PackageVersion>
     <Description>A useful description.</Description>
     <Authors>Ackara</Authors>
     <Company>Ackara</Company>
