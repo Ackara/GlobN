@@ -1,5 +1,5 @@
 # GlobN
-[![NuGet](https://img.shields.io/nuget/v/Nuget.Core.svg)](https://www.nuget.org/packages/Acklann.GlobN/)
+[![NuGet](https://img.shields.io/nuget/v/Acklann.GlobN.svg)](https://www.nuget.org/packages/Acklann.GlobN/)
 [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/Ackara/Lobby?utm_source=share-link&utm_medium=link&utm_campaign=share-link)
 ---
 
@@ -38,7 +38,8 @@ var allJsFiles cd.GetFiles(@"..\**\*.js");
 /* return: js\site.js; js\viewModel\view.js */
 ```
 
-Finally, here are some other straight forward examples. 
+Finally, here are some other straight forward examples.
+
 ```csharp
 var filteredList = listOfPaths.Filter("*.js");
 
