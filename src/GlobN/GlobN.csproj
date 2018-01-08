@@ -5,27 +5,26 @@
     <RootNamespace>Acklann.GlobN</RootNamespace>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <Product>GlobN</Product>
-    <AssemblyVersion>0.0.2</AssemblyVersion>
-    <PackageVersion>0.0.2</PackageVersion>
+    <AssemblyVersion>0.0.3</AssemblyVersion>
+    <PackageVersion>0.0.3</PackageVersion>
     <Description>A useful description.</Description>
     <Authors>Ackara</Authors>
     <Company>Ackara</Company>
     <PackageTags>glob minimatch file pattern matching</PackageTags>
     <Copyright>All Rights Reserved.</Copyright>
     <PackageIconUrl>https://github.com/ackara/globn/raw/master/art/icon.png</PackageIconUrl>
-    <PackageProjectUrl>https://github.com/ackara/globn/</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/ackara/globn/blob/master/license</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/ackara/globn</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/Ackara/GlobN/blob/master/license.txt</PackageLicenseUrl>
     <PackageReleaseNotes>https://github.com/ackara/globn/blob/master/releaseNotes.txt</PackageReleaseNotes>
-    <RepositoryUrl>https://github.com/Ackara/GlobN.git</RepositoryUrl>
+    <RepositoryUrl>https://github.com/ackara/globn.git</RepositoryUrl>
   </PropertyGroup>
-  
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DocumentationFile>bin\Release\netstandard2.0\Acklann.GlobN.xml</DocumentationFile>
   </PropertyGroup>
-  
   <ItemGroup>
     <Content Include="..\..\README.md">
-      <PackagePath></PackagePath>
+      <PackagePath>
+      </PackagePath>
       <Visible>false</Visible>
     </Content>
   </ItemGroup>
