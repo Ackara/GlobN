@@ -66,6 +66,7 @@ Task "Increment-VersionNumber" -alias "version" -description "This task incremen
 Task "Build-Solution" -alias "compile" -description "This task compiles the solution." `
 -depends @("restore") -precondition { return (-not $SkipCompilation); } -action {
 	Write-LineBreak "dotnet: msbuild";
+	Exec { &dotnet restore $((Get-Item "$RootDir\*.sln").FullName); }
 	Exec { &dotnet msbuild $((Get-Item "$RootDir\*.sln").FullName) "/p:Configuration=$Configuration" "/verbosity:minimal"; }
 }
 
