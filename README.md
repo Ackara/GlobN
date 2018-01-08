@@ -1,5 +1,4 @@
 # GlobN
-![build](https://acklann.visualstudio.com/_apis/public/build/definitions/b1517b02-8b4d-4c6a-b070-2532f9bccaf0/24/badge)
 [![NuGet](https://img.shields.io/nuget/v/Nuget.Core.svg)](https://www.nuget.org/packages/Acklann.GlobN/)
 ---
 
