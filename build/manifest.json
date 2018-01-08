@@ -1,24 +1,25 @@
 ﻿{
-    "version":  {
-                    "Major":  1,
-                    "Minor":  0,
-                    "Patch":  1,
-                    "Suffix":  ""
-                },
-    "productName":  "GlobN",
-    "description":  "A useful description.",
-    "authors":  "Ackara",
-    "owner":  "Ackara",
-    "tags":  "glob minimatch file pattern matching",
-    "copyright":  "All Rights Reserved.",
-    "iconUri":  "https://github.com/ackara/globn/raw/master/art/icon.png",
-    "licenseUri":  "https://github.com/Ackara/GlobN/blob/master/license.txt",
-    "projectUrl":  "https://github.com/ackara/globn",
-    "repositoryUrl":  "https://github.com/ackara/globn.git",
-    "releaseNotes":  "https://github.com/ackara/globn/blob/master/releaseNotes.txt",
-    "branchSuffixMap":  {
-                            "*":  "alpha",
-                            "development":  "rc",
-                            "master":  ""
-                        }
+  "version":
+  {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 1
+  },
+  "productName": "GlobN",
+  "description": "A netstandard library that allows you to effortlessy integrate minimatch/glob pattern into your console application.",
+  "authors": "Ackara",
+  "owner": "Ackara",
+  "tags": "glob minimatch file pattern matching",
+  "copyright": "Licensed under the MIT license.",
+  "iconUri": "https://github.com/ackara/globn/raw/master/art/icon.png",
+  "licenseUri": "https://github.com/Ackara/GlobN/blob/master/license.txt",
+  "projectUrl": "https://github.com/Ackara/GlobN",
+  "repositoryUrl": "https://github.com/Ackara/GlobN.git",
+  "releaseNotes": "https://github.com/Ackara/GlobN/blob/master/realeaseNotes.txt",
+  "branchSuffixMap":
+  {
+    "*": "alpha",
+    "development": "rc",
+    "master": ""
+  }
 }

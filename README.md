@@ -1,5 +1,6 @@
 # GlobN
 [![NuGet](https://img.shields.io/nuget/v/Nuget.Core.svg)](https://www.nuget.org/packages/Acklann.GlobN/)
+[![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/Ackara/Lobby?utm_source=share-link&utm_medium=link&utm_campaign=share-link)
 ---
 
 ## What is GlobN
@@ -7,6 +8,7 @@
 
 ### How it works
 Let say your current directory is as follows.
+
 ```txt
 C:\projects\coolapp
 
@@ -30,10 +32,10 @@ Lets say your in the **css folder** and you want to grab all of the `.js` files.
 
 ```csharp
 var siteJs = cd.GetFiles("../js/*.js");
-// return: js\site.js
+/* return: js\site.js */
 
 var allJsFiles cd.GetFiles(@"..\**\*.js");
-// return: js\site.js; js\viewModel\view.js
+/* return: js\site.js; js\viewModel\view.js */
 ```
 
 Finally, here are some other straight forward examples. 

@@ -4,7 +4,7 @@
     <AssemblyName>Acklann.GlobN</AssemblyName>
     <RootNamespace>Acklann.GlobN</RootNamespace>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <Product>GlobN</Product>
+    <Title>GlobN</Title>
     <AssemblyVersion>1.0.1</AssemblyVersion>
     <PackageVersion>1.0.1</PackageVersion>
     <Description>A useful description.</Description>
