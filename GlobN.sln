@@ -16,7 +16,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GlobN.MSTest", "tests\GlobN.MSTest\GlobN.MSTest.csproj", "{DC911827-8847-48C3-9412-E00DD7DE8FB9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GlobN.Benchmark", "tests\GlobN.Benchmark\GlobN.Benchmark.csproj", "{534B8DF5-829C-450E-80DB-C10AC680660C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GlobN.Benchmark", "tests\GlobN.Benchmark\GlobN.Benchmark.csproj", "{534B8DF5-829C-450E-80DB-C10AC680660C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

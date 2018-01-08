@@ -1,9 +1,10 @@
 ﻿{
   "version":
   {
-    "major": 1,
-    "minor": 0,
-    "patch": 0
+    "Major": 0,
+    "Minor": 0,
+    "Patch": 2,
+    "Suffix": ""
   },
   "productName": "GlobN",
   "description": "A useful description.",
@@ -11,15 +12,15 @@
   "owner": "Ackara",
   "tags": "glob minimatch file pattern matching",
   "copyright": "All Rights Reserved.",
-  "iconUri": null,
-  "licenseUri": null,
-  "projectUrl": null,
-  "repositoryUrl": null,
-  "releaseNotes": null,
+  "iconUri": "https://github.com/ackara/globn/raw/master/art/icon.png",
+  "licenseUri": "https://github.com/ackara/globn/blob/master/license",
+  "projectUrl": "https://github.com/ackara/globn",
+  "repositoryUrl": "https://github.com/ackara/globn.git",
+  "releaseNotes": "https://github.com/ackara/globn/blob/master/releaseNotes.txt",
   "branchSuffixMap":
   {
-    "master": "",
+    "*": "alpha",
     "development": "rc",
-    "*": "alpha"
+    "master": ""
   }
 }

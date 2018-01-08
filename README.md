@@ -1,5 +1,4 @@
 # GlobN
-
 ---
 
 ## What is GlobN
@@ -15,8 +14,8 @@ js/
 -- site.ts
 -- site.js
 -- viewModel/
----- view.ts
----- view.js
+   -- view.ts
+   -- view.js
 ```
 
 Most of the functions you'll be utilizing are extension methods. So lets say you want to grab all the files within the current directory.
@@ -57,9 +56,6 @@ glob.IsMatch("/site/content/bg.png");
 | !       | Negates the matching pattern.                                                                    |
 
 ### Where can I get it
-**GlobN** is available at [nuget.org](https://www.nuget.org/packages/Acklann.GlobN).
+**GlobN** is available at [nuget.org](https://www.nuget.org/packages/Acklann.GlobN). `PM> Install-Package Acklann.GlobN`
 
-`PM> Install-Package Acklann.GlobN`
-
-`PS> dotnet add package Acklann.GlobN`
 

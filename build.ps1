@@ -1,6 +1,10 @@
 ﻿<#
 .SYNOPSIS
-This script bootstraps the psake tasks.
+Run one or more tasks defined in the '\build\tasks.psake.ps1' file.
+
+.EXAMPLE
+.\build.ps1 -Help;
+This example prints a list of all the available tasks.
 #>
 
 Param(

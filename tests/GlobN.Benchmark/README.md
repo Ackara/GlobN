@@ -15,10 +15,10 @@ Frequency=1656394 Hz, Resolution=603.7211 ns, Timer=TSC
 
 
 ```
-|               Method |      Mean |     Error |    StdDev | Scaled | Rank |
-|--------------------- |----------:|----------:|----------:|-------:|-----:|
-| DotNet.Globbing.Glob |  1.219 ms | 0.0013 ms | 0.0012 ms |   0.05 |    I |
-|                GlobN |  1.951 ms | 0.0093 ms | 0.0087 ms |   0.08 |   II |
-|            Glob.Glob |  8.658 ms | 0.0136 ms | 0.0121 ms |   0.36 |  III |
-|                Regex | 24.130 ms | 0.0307 ms | 0.0287 ms |   1.00 |   IV |
+|      Method |      Mean |     Error |    StdDev | Scaled | Rank |
+|------------ |----------:|----------:|----------:|-------:|-----:|
+| DotNet.Glob |  1.216 ms | 0.0013 ms | 0.0011 ms |   0.05 |    I |
+|       GlobN |  2.070 ms | 0.0031 ms | 0.0025 ms |   0.09 |   II |
+|        Glob |  8.721 ms | 0.0411 ms | 0.0385 ms |   0.36 |  III |
+|       Regex | 23.987 ms | 0.0187 ms | 0.0175 ms |   1.00 |   IV |
 
