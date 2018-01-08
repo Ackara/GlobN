@@ -121,7 +121,7 @@ Task "Publish-NuGetPackages" -alias "push-nuget" -description "This task publish
 	foreach ($nupkg in (Get-ChildItem $ArtifactsDir -Recurse -Filter "*.nupkg"))
 	{
 		Write-LineBreak "dotnet: nuget push '$($nupkg.Name)'";
-		Exec { &dotnet nuget push $nupkg.FullName --api-key $apiKey; }
+		Exec { &dotnet nuget push $nupkg.FullName --api-key $apiKey --source "https://api.nuget.org/v3/index.json"; }
 	}
 }
 
