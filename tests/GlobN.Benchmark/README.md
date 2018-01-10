@@ -1,6 +1,5 @@
-﻿# Glob Comparison Benchmark
-
-
+﻿# Glob Benchmark
+This project benchmarks the speed of other Glob/Minimatch libraries on nuget.org against the `System.Text.RegularExpressions.Regex` class. The test is conducted by measuring the time it takes for each class to find all the matches within a list of 1,000 file paths.
 
 ## Results
 
