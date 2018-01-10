@@ -63,10 +63,11 @@ namespace Acklann.GlobN
 
             if (pattern == null) throw new ArgumentNullException(nameof(pattern));
             else if (!Directory.Exists(directory)) throw new DirectoryNotFoundException($"Could not find '{directory}'.");
+            else if (Path.IsPathRooted(pattern)) yield return pattern.ToString();
             else
             {
                 pattern.ExpandVariables = expandVariables;
-                int totalUpOperators = GetUpOperators(pattern.ToString(), out string notUsed);
+                int totalUpOperators = GetUpOperators(pattern, out string notUsed);
                 directory = MoveUpDirectory(directory, totalUpOperators);
 
                 foreach (var path in Directory.EnumerateFiles(directory, "*", SearchOption.AllDirectories))

@@ -15,6 +15,7 @@ namespace Acklann.GlobN.Tests
         {
             // Arrange
             string empty = null;
+            string sampleFile = Path.GetTempFileName();
             string root = Path.Combine("C:\\", "websites", "coolapp.com", "src", "wwwroot");
 
             // Act
@@ -23,6 +24,7 @@ namespace Acklann.GlobN.Tests
             var result3 = "..\\file.tmp".ExpandPath(@"%TEMP%\foo");
             var result4 = "../".ExpandPath(@"%TEMP%\foo", expandVariables: false);
             var result5 = empty.ExpandPath(root);
+            var result6 = sampleFile.ExpandPath(root);
 
             // Assert
             result1.ShouldEndWith(@"src\Views");
@@ -30,6 +32,7 @@ namespace Acklann.GlobN.Tests
             result3.ShouldContain(Environment.ExpandEnvironmentVariables("%TEMP%"));
             result4.ShouldBe("%TEMP%");
             result5.ShouldBe(root);
+            result6.ShouldBe(sampleFile);
         }
 
         [TestMethod]
@@ -44,6 +47,7 @@ namespace Acklann.GlobN.Tests
             var set1 = "*.dll".ResolvePath(directory).ToArray();
             var set2 = "../../../Tests/*.cs".ResolvePath(directory).ToArray();
             var set3 = new Glob(sampleFile.Name).ResolvePath("%TEMP%").ToArray();
+            var set4 = sampleFile.FullName.ResolvePath(directory).ToArray();
 
             if (sampleFile.Exists) sampleFile.Delete();
 
@@ -55,6 +59,9 @@ namespace Acklann.GlobN.Tests
             set2.ShouldAllBe(x => x.EndsWith(".cs"));
 
             set3.ShouldContain(sampleFile.FullName);
+
+            set4.Length.ShouldBe(1);
+            set4[0].ShouldBe(sampleFile.FullName);
 
             Should.Throw<ArgumentNullException>(() => { err.ResolvePath().ToArray(); });
             Should.Throw<DirectoryNotFoundException>(() => { new Glob(sampleFile.Name).ResolvePath("%TEMP%", expandVariables: false).ToArray(); });
