@@ -1,25 +1,24 @@
 ﻿{
-  "version":
-  {
-    "Major": 1,
-    "Minor": 0,
-    "Patch": 1
-  },
-  "owner": "Ackara",
-  "authors": "Ackara",
-  "productName": "GlobN",
-  "description": "A netstandard library that allows you to effortlessy grab files via glob/minimatch patterns. Great for resolving relative paths coming from the command-line",
-  "projectUrl": "https://github.com/Ackara/GlobN",
-  "repositoryUrl": "https://github.com/Ackara/GlobN.git",
-  "iconUri": "https://github.com/Ackara/GlobN/raw/master/art/icon.png",
-  "licenseUri": "https://github.com/Ackara/GlobN/blob/master/license.txt",
-  "releaseNotes": "https://github.com/Ackara/GlobN/blob/master/realeaseNotes.txt",
-  "copyright": "Licensed under the MIT license.",
-  "tags": "glob minimatch file pattern matching",
-  "branchSuffixMap":
-  {
-    "*": "alpha",
-    "development": "rc",
-    "master": ""
-  }
+    "version":  {
+                    "Major":  1,
+                    "Minor":  0,
+                    "Patch":  2,
+                    "Suffix":  ""
+                },
+    "owner":  "Ackara",
+    "authors":  "Ackara",
+    "productName":  "GlobN",
+    "description":  "A netstandard library that allows you to effortlessy grab files via glob/minimatch patterns. Great for resolving relative paths coming from the command-line",
+    "projectUrl":  "https://github.com/Ackara/GlobN",
+    "repositoryUrl":  "https://github.com/Ackara/GlobN.git",
+    "iconUri":  "https://github.com/Ackara/GlobN/raw/master/art/icon.png",
+    "licenseUri":  "https://github.com/Ackara/GlobN/blob/master/license.txt",
+    "releaseNotes":  "https://github.com/Ackara/GlobN/blob/master/realeaseNotes.txt",
+    "copyright":  "Licensed under the MIT license.",
+    "tags":  "glob minimatch file pattern matching",
+    "branchSuffixMap":  {
+                            "*":  "alpha",
+                            "development":  "rc",
+                            "master":  ""
+                        }
 }

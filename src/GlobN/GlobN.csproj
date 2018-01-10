@@ -5,18 +5,18 @@
     <RootNamespace>Acklann.GlobN</RootNamespace>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <Title>GlobN</Title>
-    <AssemblyVersion>1.0.1</AssemblyVersion>
-    <PackageVersion>1.0.1</PackageVersion>
-    <Description>A useful description.</Description>
+    <AssemblyVersion>1.0.2</AssemblyVersion>
+    <PackageVersion>1.0.2</PackageVersion>
+    <Description>A netstandard library that allows you to effortlessy grab files via glob/minimatch patterns. Great for resolving relative paths coming from the command-line</Description>
     <Authors>Ackara</Authors>
     <Company>Ackara</Company>
     <PackageTags>glob minimatch file pattern matching</PackageTags>
-    <Copyright>All Rights Reserved.</Copyright>
-    <PackageIconUrl>https://github.com/ackara/globn/raw/master/art/icon.png</PackageIconUrl>
-    <PackageProjectUrl>https://github.com/ackara/globn</PackageProjectUrl>
+    <Copyright>Licensed under the MIT license.</Copyright>
+    <PackageIconUrl>https://github.com/Ackara/GlobN/raw/master/art/icon.png</PackageIconUrl>
+    <PackageProjectUrl>https://github.com/Ackara/GlobN</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/Ackara/GlobN/blob/master/license.txt</PackageLicenseUrl>
-    <PackageReleaseNotes>https://github.com/ackara/globn/blob/master/releaseNotes.txt</PackageReleaseNotes>
-    <RepositoryUrl>https://github.com/ackara/globn.git</RepositoryUrl>
+    <PackageReleaseNotes>https://github.com/Ackara/GlobN/blob/master/realeaseNotes.txt</PackageReleaseNotes>
+    <RepositoryUrl>https://github.com/Ackara/GlobN.git</RepositoryUrl>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DocumentationFile>bin\Release\netstandard2.0\Acklann.GlobN.xml</DocumentationFile>
