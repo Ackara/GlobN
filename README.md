@@ -1,5 +1,6 @@
 # GlobN
 [![NuGet](https://img.shields.io/nuget/v/Acklann.GlobN.svg)](https://www.nuget.org/packages/Acklann.GlobN/)
+[![NuGet](https://img.shields.io/nuget/dt/Acklann.GlobN.svg)](https://www.nuget.org/packages/Acklann.GlobN/)
 [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/Ackara/Lobby?utm_source=share-link&utm_medium=link&utm_campaign=share-link)
 ---
 
