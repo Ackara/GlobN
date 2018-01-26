@@ -2,7 +2,7 @@
     "version":  {
                     "Major":  1,
                     "Minor":  0,
-                    "Patch":  6,
+                    "Patch":  7,
                     "Suffix":  ""
                 },
     "owner":  "Ackara",
@@ -13,7 +13,7 @@
     "repositoryUrl":  "https://github.com/Ackara/GlobN.git",
     "iconUri":  "https://github.com/Ackara/GlobN/raw/master/art/icon.png",
     "licenseUri":  "https://github.com/Ackara/GlobN/blob/master/license.txt",
-    "releaseNotes":  "https://github.com/Ackara/GlobN/blob/master/realeaseNotes.txt",
+    "releaseNotes":  "version 1.0.7\r\n-------------\r\nEnhancements:\r\n  * Make matches case-insensitive.\r\n\r\nversion 1.0.0\r\n-------------\r\nFeatures:\r\n  * Suuports the following wildcards (\u0027*\u0027, \u0027**\u0027, \u0027?\u0027).\r\n  * Supports the path expansion for both environment variables and parent directories (\u0027..\u0027).\r\n  * Supports pattern negating matches (\u0027!\u0027).\r\n  * Supports filtering list of paths.\r\n",
     "copyright":  "Licensed under the MIT license.",
     "tags":  "glob minimatch file pattern matching",
     "branchSuffixMap":  {
