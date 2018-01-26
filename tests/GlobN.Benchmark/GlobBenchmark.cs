@@ -36,6 +36,7 @@ namespace Acklann.GlobN.Benchmark
 
         public string[] FileList, Globs, RegexExp;
 
+        /* Case-Insensitive */
         [Benchmark]
         public int GlobN()
         {
@@ -52,6 +53,7 @@ namespace Acklann.GlobN.Benchmark
             return matches;
         }
 
+        /* Case-Sensitive */
         [Benchmark(Description = "DotNet.Glob")]
         public int DotNetGlob()
         {

@@ -171,7 +171,7 @@ namespace Acklann.GlobN.Tests
         [DataRow(@"C:\root\folder\sub\file.txt", @"sub\**\*\file.txt")]
         [DataRow(@"C:\root\bolder\sub\file.txt", @"root\f*\**\file.txt")]
         [DataRow(@"C:\root\folder\sub\file.txt", @"roo*\foldg?\**\file.txt")]
-        [DataRow(@"C:\root\folder\sub\file.txt", @"!roo*\folde?\**\file.txt")]
+        [DataRow(@"C:\Root\Folder\sub\file.txt", @"!roo*\folde?\**\file.txt")]
         public void IsMatch_should_reject_a_wildcard_combinations(string filePath, string pattern)
         {
             RunIsMatchTest(pattern, filePath, shouldBe: false);

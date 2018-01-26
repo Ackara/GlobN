@@ -91,7 +91,7 @@ namespace Acklann.GlobN
             do
             {
                 State.Change(Pattern[P]);
-                Result result = State.Evaluate(Pattern[P], Value[V]);
+                Result result = State.Evaluate(char.ToLowerInvariant(Pattern[P]), char.ToLowerInvariant(Value[V]));
 
                 if (PatternIsIllegal) return false;
                 else if (result.PatternIsMatch != null) return (result.PatternIsMatch ?? false) == !_negate;
