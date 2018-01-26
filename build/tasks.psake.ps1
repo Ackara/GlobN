@@ -54,7 +54,9 @@ Task "Import-Dependencies" -alias "restore" -description "This task imports all 
 
 Task "Increment-VersionNumber" -alias "version" -description "This task increments the project's version numbers" `
 -depends @("restore") -action {
-	$result = Get-BuildboxManifest $ManifestJson | Update-ProjectManifests "$RootDir\src" -Break:$Major -Feature:$Minor -Patch -Tag -Commit;
+	$manifest = Get-BuildboxManifest $ManifestJson;
+	$manifest.ReleaseNotes = Get-Content "$RootDir\realeaseNotes.txt" | Out-String;
+	$result = $manifest | Update-ProjectManifests "$RootDir\src" -Break:$Major -Feature:$Minor -Patch -Tag -Commit;
 
 	Write-Host "   * Incremented version number from '$($result.OldVersion)' to '$($result.Version)'.";
 	foreach ($file in $result.ModifiedFiles)

@@ -1,3 +1,12 @@
+version 1.0.7
+-------------
+Enhancements:
+  * Make matches case-insensitive.
+
 version 1.0.0
 -------------
-Initial release.
+Features:
+  * Suuports the following wildcards ('*', '**', '?').
+  * Supports the path expansion for both environment variables and parent directories ('..').
+  * Supports pattern negating matches ('!').
+  * Supports filtering list of paths.
