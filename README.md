@@ -1,7 +1,7 @@
 # GlobN
 [![NuGet](https://img.shields.io/nuget/v/Acklann.GlobN.svg)](https://www.nuget.org/packages/Acklann.GlobN/)
 [![NuGet](https://img.shields.io/nuget/dt/Acklann.GlobN.svg)](https://www.nuget.org/packages/Acklann.GlobN/)
-[![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/Ackara/Lobby?utm_source=share-link&utm_medium=link&utm_campaign=share-link)
+![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)
 ---
 
 ## What is GlobN
@@ -60,7 +60,7 @@ glob.IsMatch("/site/content/bg.png");
 | ?       | Match a single character.                                                                        |
 | !       | Negates the matching pattern.                                                                    |
 
+**NOTE: matches a case-insensitive.**
+
 ### Where can I get it
 **GlobN** is available at [nuget.org](https://www.nuget.org/packages/Acklann.GlobN). `PM> Install-Package Acklann.GlobN`
-
-
