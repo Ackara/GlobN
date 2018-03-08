@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Text;
 
 namespace Acklann.GlobN
 {
@@ -58,27 +57,26 @@ namespace Acklann.GlobN
         }
 
         /// <summary>
-        /// Creates a new file, writes the specified string to the file, and then closes the file. If the target file already exists, it is overwritten.
+        /// Determines whether the path is a child of the specified directory.
         /// </summary>
-        /// <param name="path">The path.</param>
-        /// <param name="contents">The contents.</param>
-        public static void WriteToFile(this string path, string contents)
+        /// <param name="path">A absolute path.</param>
+        /// <param name="directory">The absolute of the directory.</param>
+        /// <returns><c>true</c> if child of the specified directory; otherwise, <c>false</c>.</returns>
+        public static bool IsChildOf(this string path, string directory)
         {
-            WriteToFile(path, contents, Encoding.Default);
-        }
+            if (string.IsNullOrEmpty(directory) || string.IsNullOrEmpty(path)) return false;
 
-        /// <summary>
-        /// Creates a new file, writes the specified string to the file, and then closes the file. If the target file already exists, it is overwritten.
-        /// </summary>
-        /// <param name="path">The path.</param>
-        /// <param name="contents">The contents.</param>
-        /// <param name="encoding">The encoding.</param>
-        public static void WriteToFile(this string path, string contents, Encoding encoding)
-        {
-            string dir = Path.GetDirectoryName(path);
-            if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
+            char d;
+            int n = (directory.Length < path.Length) ? directory.Length : path.Length;
+            for (int i = 0; i < n; i++)
+            {
+                d = char.ToLowerInvariant(directory[i]);
 
-            File.WriteAllText(path, contents, encoding);
+                if (d.IsDirectorySeparator()) continue;
+                else if (d != char.ToLowerInvariant(path[i])) return false;
+            }
+
+            return true;
         }
     }
 }

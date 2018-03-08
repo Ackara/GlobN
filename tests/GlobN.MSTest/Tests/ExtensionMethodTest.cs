@@ -140,15 +140,29 @@ namespace Acklann.GlobN.Tests
             set2.ShouldAllBe(x => x.EndsWith(".json"));
         }
 
-        [TestMethod]
+        [DataTestMethod]
+        [DataRow(false, "", "")]
+        [DataRow(false, null, null)]
+        [DataRow(false, "", @"C:\temp\file.txt")]
+        [DataRow(false, @"\temp\content", @"\file.txt")]
+        [DataRow(true, @"C:\temp", @"C:\temp\file.txt")]
+        [DataRow(false, @"C:\temp\content", @"C:/temp/file.txt")]
+        [DataRow(false, @"/user/docs/file.txt", @"/temp/file.txt")]
+        [DataRow(true, @"C:\temp\content", @"C:\TeMp/content\file.txt")]
+        public void IsChildOf_should_determine_if_path_is_subFolder(bool expected, string root, string path)
+        {
+            path.IsChildOf(root).ShouldBe(expected, $"root:'{root}' | path:'{path}'");
+        }
+
+        //[TestMethod]
         public void WriteToFile_should_create_a_new_file()
         {
-            string path = Path.Combine(Path.GetTempPath(), "delete_me", "remove_me.txt");
-            var sample = "she sell sea shells by the seashore";
+            //string path = Path.Combine(Path.GetTempPath(), "delete_me", "remove_me.txt");
+            //var sample = "she sell sea shells by the seashore";
 
-            path.WriteToFile(sample);
+            //path.WriteToFile(sample);
 
-            File.ReadAllText(path).ShouldBe(sample);
+            //File.ReadAllText(path).ShouldBe(sample);
         }
     }
 }
