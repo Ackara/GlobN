@@ -36,7 +36,7 @@ namespace Acklann.GlobN.Tests
         }
 
         [TestMethod]
-        public void ResolvePath_should_return_a_file_list_matching_the_pattern()
+        public void ResolvePath_should_return_a_file_list_that_match_the_pattern()
         {
             // Arrange
             Glob err = null;
@@ -68,7 +68,7 @@ namespace Acklann.GlobN.Tests
         }
 
         [TestMethod]
-        public void GetFiles_should_return_a_file_list_matching_the_pattern()
+        public void GetFiles_should_return_a_file_list_that_match_the_pattern()
         {
             // Arrange
             var sampleFile = new FileInfo(Path.GetTempFileName());
@@ -99,7 +99,7 @@ namespace Acklann.GlobN.Tests
             var samplePath = Path.Combine("C:\\", "app", "cool_app", "settings", "user.config");
 
             "".SplitPath(2).ShouldBeEmpty();
-            new Glob(samplePath).SplitPath(0).ShouldBeEmpty();
+            samplePath.SplitPath(0).ShouldBeEmpty();
             samplePath.SplitPath(100).ShouldBe(samplePath);
             samplePath.SplitPath(2).ShouldBe(@"\settings\user.config");
             Should.Throw<ArgumentNullException>(() => { err.SplitPath(2); });
@@ -112,7 +112,7 @@ namespace Acklann.GlobN.Tests
             var sample = @"C:\apps\coolapp\settings";
 
             sample.MoveUpDirectory(2).ShouldBe(@"C:\apps");
-            new Glob(sample).MoveUpDirectory(100).ShouldBeNullOrEmpty();
+            sample.MoveUpDirectory(100).ShouldBeNullOrEmpty();
             Should.Throw<ArgumentException>(() => { err.MoveUpDirectory(2); });
         }
 
@@ -138,6 +138,17 @@ namespace Acklann.GlobN.Tests
 
             set2.Length.ShouldBe(2);
             set2.ShouldAllBe(x => x.EndsWith(".json"));
+        }
+
+        [TestMethod]
+        public void WriteToFile_should_create_a_new_file()
+        {
+            string path = Path.Combine(Path.GetTempPath(), "delete_me", "remove_me.txt");
+            var sample = "she sell sea shells by the seashore";
+
+            path.WriteToFile(sample);
+
+            File.ReadAllText(path).ShouldBe(sample);
         }
     }
 }
