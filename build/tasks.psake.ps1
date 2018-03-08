@@ -19,7 +19,7 @@ Properties {
 Task "default" -depends @("restore", "compile", "test");
 
 Task "Deploy" -alias "push" -description "This task compile, test then publish the application." `
--depends @("restore", "version", "compile", "test", "pack", "publish");
+-depends @("restore", "version", "compile", "test", "pack", "publish", "tag");
 
 #region ----- COMPILATION -----
 
@@ -56,7 +56,7 @@ Task "Increment-VersionNumber" -alias "version" -description "This task incremen
 -depends @("restore") -action {
 	$manifest = Get-BuildboxManifest $ManifestJson;
 	$manifest.ReleaseNotes = Get-Content "$RootDir\realeaseNotes.txt" | Out-String;
-	$result = $manifest | Update-ProjectManifests "$RootDir\src" -Break:$Major -Feature:$Minor -Patch -Tag -Commit;
+	$result = $manifest | Update-ProjectManifests "$RootDir\src" -Break:$Major -Feature:$Minor -Patch -Commit;
 
 	Write-Host "   * Incremented version number from '$($result.OldVersion)' to '$($result.Version)'.";
 	foreach ($file in $result.ModifiedFiles)
@@ -126,6 +126,14 @@ Task "Publish-NuGetPackages" -alias "push-nuget" -description "This task publish
 		Write-LineBreak "dotnet: nuget push '$($nupkg.Name)'";
 		Exec { &dotnet nuget push $nupkg.FullName --api-key $apiKey --source "https://api.nuget.org/v3/index.json"; }
 	}
+}
+
+Task "Tag-Release" -alias "tag" -description "This tasks tags the source control with the current version number." `
+-depends @("restore") -action {
+	$version = Get-BuildboxManifest $ManifestJson | Get-VersionNumber;
+
+	Exec { &git tag v$version | Out-Null; }
+	Exec { &git push origin --tags | Out-Null; }
 }
 
 Task "Run-Benchmarks" -alias "benchmark" -description "This task runs all project benchmarks." `
