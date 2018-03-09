@@ -54,11 +54,11 @@ glob.IsMatch("/site/content/bg.png");
 
 | Pattern | Description                                                                                      |
 |---------|--------------------------------------------------------------------------------------------------|
-| ..\     | Moves the current directory up one folder. **Only applicable at the beginning of the pattern**.  |
-| *       | Match zero or more characters excluding the directory separator.                                 |
-| **      | Match zero or more directories.                                                                  |
-| ?       | Match a single character.                                                                        |
-| !       | Negates the matching pattern.                                                                    |
+| ..\     | Moves the current directory up one folder. **Only applicable at the beginning of the pattern**.
+| *       | Match zero or more characters excluding the directory separator.
+| **      | Match zero or more directories.
+| ?       | Match a single character.
+| !       | Negates the matching pattern. **Only applicable at the beginning of the pattern**.
 
 **NOTE: matches a case-insensitive.**
 
