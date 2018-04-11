@@ -11,6 +11,30 @@ namespace Acklann.GlobN
         /* String */
 
         /// <summary>
+        /// Returns a new string in which all occurrences of a specified string in the current instance are replaced with another specified string. Directory separator characters are equivalent.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <param name="oldValue">The value to replace.</param>
+        /// <param name="newValue">The string to replace all occurrences of oldValue.</param>
+        /// <returns>A string that is equivalent to the current string except that all instances of oldValue are replaced with newValue. If oldValue is not found in the current instance, the method returns the current instance unchanged.</returns>
+        /// <exception cref="ArgumentException">oldValue is null or empty.</exception>
+        public static string ReplacePath(this string path, string oldValue, string newValue)
+        {
+            if (string.IsNullOrEmpty(oldValue)) throw new ArgumentException($"{oldValue} cannot be null or empty", nameof(oldValue));
+            else
+            {
+                int m;
+                char p, o = oldValue[0];
+                for (int i = 0; i < path.Length; i++)
+                {
+                    p = path[i];
+                    if (p == o) { }
+                }
+            }
+            throw new System.NotImplementedException();
+        }
+
+        /// <summary>
         /// Moves the path up a directory the specified amount of times.
         /// </summary>
         /// <param name="path">The path.</param>

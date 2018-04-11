@@ -33,13 +33,13 @@
             }
         }
 
-        public override void Change(char p)
+        public override void Change(in char p)
         {
             if (_satisfied) base.Change(p);
             else _surrogate = GetState(p);
         }
 
-        public override Result Evaluate(char p, char v)
+        public override Result Evaluate(in char p, in char v)
         {
             if (v.IsDirectorySeparator()) _segmentsTraversed++;
             bool segmentCharsAreEqual = _surrogate.EquateCharacters(p, v);

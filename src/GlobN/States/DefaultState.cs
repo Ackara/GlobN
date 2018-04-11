@@ -7,7 +7,7 @@
             Context = context;
         }
 
-        public override Result Evaluate(char p, char v)
+        public override Result Evaluate(in char p, in char v)
         {
             bool charactersAreEqual = EquateCharacters(p, v);
 

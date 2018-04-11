@@ -21,14 +21,14 @@
             Context.V--;
         }
 
-        public virtual void Change(char p)
+        public virtual void Change(in char p)
         {
             Context.State = GetState(p);
         }
 
         public abstract void Initialize(Glob context);
 
-        public abstract Result Evaluate(char p, char v);
+        public abstract Result Evaluate(in char p, in char v);
 
         public virtual bool EquateCharacters(char p, char v)
         {
@@ -40,7 +40,7 @@
 
         // ----- HELPER METHODS -----
 
-        internal State GetState(char p)
+        internal State GetState(in char p)
         {
             State nextState;
             switch (p)
@@ -74,7 +74,7 @@
             return nextState;
         }
 
-        internal char CharAt(int position)
+        internal char CharAt(in int position)
         {
             int index = Context.P + position;
             return (index >= 0 && index <= (Context.Pattern.Length - 1)) ? Context.Pattern[index] : NULL_CHAR;

@@ -60,7 +60,7 @@ namespace Acklann.GlobN
         /// <param name="path">The file path.</param>
         /// <param name="pattern">The glob pattern.</param>
         /// <returns><c>true</c> if the specified path match the pattern; otherwise, <c>false</c>.</returns>
-        public static bool IsMatch(string path, string pattern)
+        public static bool IsMatch(in string path, string pattern)
         {
             return new Glob(pattern).IsMatch(path);
         }
@@ -70,7 +70,7 @@ namespace Acklann.GlobN
         /// </summary>
         /// <param name="absolutePath">The absolute file path.</param>
         /// <returns><c>true</c> if the specified absolute path is match this expression; otherwise, <c>false</c>.</returns>
-        public bool IsMatch(string absolutePath)
+        public bool IsMatch(in string absolutePath)
         {
             if (string.IsNullOrEmpty(_pattern)
                 || _pattern == "*"
@@ -124,7 +124,7 @@ namespace Acklann.GlobN
         /// </summary>
         /// <param name="pattern">An string to compare with this expression.</param>
         /// <returns><c>true</c> if the specified <paramref name="pattern"/> is equal to this instance; otherwise, <c>false</c>.</returns>
-        public bool Equals(string pattern)
+        public bool Equals(in string pattern)
         {
             return _pattern == pattern;
         }

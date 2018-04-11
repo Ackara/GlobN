@@ -11,6 +11,34 @@ namespace Acklann.GlobN.Tests
     public class ExtensionMethodTest
     {
         [TestMethod]
+        public void ReplacePath_should_replace_old_values()
+        {
+            // Arrange
+            var cases = new(string, string, string, string)[]
+            {
+                ("ssiteee", "site", "", "see"),
+                //(@"\site\content\img\bg.jpg", "content/img", "assets/images", @"\site\assets/images\bg.jpg"),
+                //("/site/content/img/bg.jpg", "content/img", "assets/images", "/site/assets/images/bg.jpg"),
+                //("/site/content/img/bg.jpg", "img", "images", "/site/content/images/bg.jpg"),
+                //("/site/content/img/bg.jpg", @"\site\", "/wwwroot/", "/wwwroot/content/img/bg.jpg"),
+                //(@"\site\content\img\bg.jpg", "content/img", "", @"\site\assets/images\bg.jpg"),
+            };
+
+            // Act & Assert
+            foreach (var (value, oldValue, newValule, expected) in cases)
+            {
+                
+            }
+        }
+
+        [TestMethod]
+        public void ReplacePath_should_throw_exception_when_value_is_null()
+        {
+            Should.Throw<ArgumentException>(() => { "/site/content/bg.jpg".ReplacePath("", "bg.png"); });
+            Should.Throw<ArgumentException>(() => { "/site/content/bg.jpg".ReplacePath(null, "bg.png"); });
+        }
+
+        [TestMethod]
         public void ExpandPath_should_convert_a_pattern_to_absolute_path()
         {
             // Arrange
