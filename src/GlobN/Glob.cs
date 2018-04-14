@@ -151,6 +151,7 @@ namespace Acklann.GlobN
 
         internal string FormatError(string errorMsg)
         {
+            // TODO: Define rules.
             errorMsg = string.Format(@"
 The pattern '{0}' is not well-formed. {1}.
 

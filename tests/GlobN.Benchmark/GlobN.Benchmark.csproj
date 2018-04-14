@@ -18,9 +18,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="benchmarkdotnet" Version="0.10.12" />
+    <PackageReference Include="benchmarkdotnet" Version="0.10.14" />
     <PackageReference Include="dotnet.glob" Version="1.6.9" />
     <PackageReference Include="glob" Version="0.4.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
   </ItemGroup>
 
   <ItemGroup>
