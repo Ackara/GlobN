@@ -9,23 +9,20 @@ using G = Glob;
 
 namespace Acklann.GlobN.Benchmark
 {
+    [MemoryDiagnoser]
     [OrderProvider(SummaryOrderPolicy.FastestToSlowest)]
-    [RankColumn(BenchmarkDotNet.Mathematics.NumeralSystem.Roman)]
+    [RankColumn(BenchmarkDotNet.Mathematics.NumeralSystem.Arabic)]
     public class GlobBenchmark
     {
         public GlobBenchmark()
         {
             var list = new Stack<string>();
-            using (var stream = File.OpenRead("fileList.txt"))
+            using (var reader = new StreamReader(File.OpenRead("fileList.txt")))
             {
-                using (var reader = new StreamReader(stream))
+                while (!reader.EndOfStream)
                 {
-                    string path;
-                    while (!reader.EndOfStream)
-                    {
-                        path = reader.ReadLine().Trim();
-                        if (!string.IsNullOrEmpty(path)) list.Push(path);
-                    }
+                    string path = reader.ReadLine().Trim();
+                    if (!string.IsNullOrEmpty(path)) list.Push(path);
                 }
             }
 
@@ -34,9 +31,24 @@ namespace Acklann.GlobN.Benchmark
             RegexExp = Patterns().Select(x => x.Regex).ToArray();
         }
 
-        public string[] FileList, Globs, RegexExp;
+        public readonly string[] FileList, Globs, RegexExp;
 
-        /* Case-Insensitive */
+        [Benchmark(Baseline = true)]
+        public int Regex()
+        {
+            int matches = 0;
+            foreach (var pattern in RegexExp)
+            {
+                var sut = new Regex(pattern, RegexOptions.Compiled);
+                foreach (var path in FileList)
+                {
+                    if (sut.IsMatch(path)) matches++;
+                }
+            }
+
+            return matches;
+        }
+
         [Benchmark]
         public int GlobN()
         {
@@ -53,7 +65,6 @@ namespace Acklann.GlobN.Benchmark
             return matches;
         }
 
-        /* Case-Sensitive */
         [Benchmark(Description = "DotNet.Glob")]
         public int DotNetGlob()
         {
@@ -77,22 +88,6 @@ namespace Acklann.GlobN.Benchmark
             foreach (var pattern in Globs)
             {
                 var sut = new G.Glob(pattern, G.GlobOptions.Compiled);
-                foreach (var path in FileList)
-                {
-                    if (sut.IsMatch(path)) matches++;
-                }
-            }
-
-            return matches;
-        }
-
-        [Benchmark(Baseline = true)]
-        public int Regex()
-        {
-            int matches = 0;
-            foreach (var pattern in RegexExp)
-            {
-                var sut = new Regex(pattern, RegexOptions.Compiled);
                 foreach (var path in FileList)
                 {
                     if (sut.IsMatch(path)) matches++;

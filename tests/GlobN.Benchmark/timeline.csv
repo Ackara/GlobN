@@ -1,0 +1,5 @@
+"Date","Class","Method","Mean (ms)","StdDev (ms)","Scaled (ms)","Allocated (KB)"
+"2018-04-14 22:29:05","GlobBenchmark","DotNet.Glob","1.230","0.0045","0.05","8.92"
+"2018-04-14 22:29:05","GlobBenchmark","GlobN","2.864","0.0096","0.12","2031.06"
+"2018-04-14 22:29:05","GlobBenchmark","Glob","8.403","0.0222","0.35","16108.56"
+"2018-04-14 22:29:05","GlobBenchmark","Regex","24.306","0.0605","1.00","21.55"
