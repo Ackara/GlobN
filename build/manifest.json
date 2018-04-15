@@ -2,7 +2,7 @@
     "version":  {
                     "Major":  1,
                     "Minor":  1,
-                    "Patch":  0,
+                    "Patch":  1,
                     "Suffix":  ""
                 },
     "owner":  "Ackara",
@@ -20,5 +20,13 @@
                             "*":  "alpha",
                             "development":  "rc",
                             "master":  ""
-                        }
+                        },
+    "Id":  "",
+    "Name":  "",
+    "Summary":  "",
+    "Author":  "",
+    "Company":  "",
+    "License":  "",
+    "Website":  "",
+    "Icon":  ""
 }

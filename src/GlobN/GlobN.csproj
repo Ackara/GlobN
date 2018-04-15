@@ -5,8 +5,8 @@
     <RootNamespace>Acklann.GlobN</RootNamespace>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <Title>GlobN</Title>
-    <AssemblyVersion>1.1.0</AssemblyVersion>
-    <PackageVersion>1.1.0</PackageVersion>
+    <AssemblyVersion>1.1.1</AssemblyVersion>
+    <PackageVersion>1.1.1</PackageVersion>
     <Description>A netstandard library that allows you to effortlessy grab files via glob/minimatch patterns. Great for resolving relative paths coming from the command-line</Description>
     <Authors>Ackara</Authors>
     <Company>Ackara</Company>
