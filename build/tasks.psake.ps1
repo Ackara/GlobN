@@ -138,30 +138,35 @@ Task "Tag-Release" -alias "tag" -description "This tasks tags the source control
 
 Task "Run-Benchmarks" -alias "benchmark" -description "This task runs all project benchmarks." `
 -depends @("restore") -action {
-	$bencharkProj = Get-Item "$RootDir\tests\*\*Benchmark.csproj";
-	$bin = "$($bencharkProj.DirectoryName)\bin\$Configuration";
+	$benchmarkProject = Get-ChildItem $RootDir -Recurse -Filter "*Benchmark.csproj" | Select-Object -First 1;
 
-	try
+	if (Test-Path $benchmarkProject)
 	{
-		Write-LineBreak "dotnet: msbuild";
-		Get-ChildItem $bin | Remove-Item -Recurse -Force;
-		Exec { &dotnet msbuild $((Get-Item "$RootDir\*.sln").FullName) /t:Clean,Build /p:Configuration=$Configuration; }
+		Write-LineBreak "dotnet: rebuild";
+		Exec { &dotnet clean $((Get-Item "$RootDir\*.sln").FullName); }
+		Exec { &dotnet build $((Get-Item "$RootDir\*.sln").FullName) --configuration Release; }
 
-		$exe = Get-ChildItem "$($bencharkProj.DirectoryName)\bin\$Configuration" -Recurse -Filter "*Benchmark.dll" | Select-Object -First 1;
-		Push-Location $exe.DirectoryName;
-		Write-LineBreak "dotnet: run benchmark";
-		Exec { &dotnet $exe.FullName; }
+		try
+		{
+			$exe = Get-ChildItem "$($benchmarkProject.DirectoryName)\bin\Release" -Recurse -Filter "*Benchmark.dll" | Select-Object -First 1;
+			Push-Location $exe.DirectoryName;
+			Write-LineBreak "dotnet: run benchmarks";
+			Exec { &dotnet $exe.FullName; }
 
-		# Copying benchmark results to report.
-		$reportFile = Get-Item "$($bencharkProj.DirectoryName)\*.md";
-		$summary = Get-Item "$($exe.DirectoryName)\*artifacts*\*\*.md" | Get-Content | Out-String;
-		$report = $reportFile | Get-Content | Out-String;
-		$match = [Regex]::Match($report, '(?i)#+\s+(Summary|Results?|Report)');
-		$report = $report.Substring(0, ($match.Index + $match.Length));
-		"$report`r`n`r`n$summary" | Out-File $reportFile -Encoding utf8;
-		Get-Item "$($exe.DirectoryName)\*artifacts*\*\*.html" | Invoke-Item;
+			# Copying benchmark results to report.
+			$reportFile = Get-Item "$($benchmarkProject.DirectoryName)\*.md";
+			if (Test-Path $reportFile)
+			{
+				$summary = Get-Item "$($exe.DirectoryName)\*artifacts*\*\*.md" | Get-Content | Out-String;
+				$report = $reportFile | Get-Content | Out-String;
+				$match = [Regex]::Match($report, '(?i)#+\s+(Summary|Results?|Report)');
+				$report = $report.Substring(0, ($match.Index + $match.Length));
+				"$report`r`n`r`n$summary" | Out-File $reportFile -Encoding utf8;
+				Get-Item "$($exe.DirectoryName)\*artifacts*\*\*.html" | Invoke-Item;
+			}
+		}
+		finally { Pop-Location; }
 	}
-	finally { Pop-Location; }
 }
 
 #endregion
