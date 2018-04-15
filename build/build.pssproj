@@ -35,6 +35,7 @@
       <SubType>
       </SubType>
     </Compile>
+    <Compile Include="_.psake.ps1" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\commands.json">
