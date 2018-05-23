@@ -19,20 +19,20 @@ namespace Acklann.GlobN.Tests
             string root = Path.Combine("C:\\", "websites", "coolapp.com", "src", "wwwroot");
 
             // Act
-            var result1 = @"..\Views".ExpandPath(root);
-            var result2 = new Glob("../../index.html").ExpandPath(root);
-            var result3 = "..\\file.tmp".ExpandPath(@"%TEMP%\foo");
-            var result4 = "../".ExpandPath(@"%TEMP%\foo", expandVariables: false);
-            var result5 = empty.ExpandPath(root);
-            var result6 = sampleFile.ExpandPath(root);
+            var case1 = @"..\Views".ExpandPath(root);
+            var case2 = new Glob("../../index.html").ExpandPath(root);
+            var case3 = "..\\file.tmp".ExpandPath(@"%TEMP%\foo", true);
+            var case4 = "../".ExpandPath(@"%TEMP%\foo", expandVariables: false);
+            var case5 = empty.ExpandPath(root);
+            var case6 = sampleFile.ExpandPath(root);
 
             // Assert
-            result1.ShouldEndWith(@"src\Views");
-            result2.ShouldEndWith("coolapp.com\\index.html");
-            result3.ShouldContain(Environment.ExpandEnvironmentVariables("%TEMP%"));
-            result4.ShouldBe("%TEMP%");
-            result5.ShouldBe(root);
-            result6.ShouldBe(sampleFile);
+            case1.ShouldEndWith(@"src\Views");
+            case2.ShouldEndWith("coolapp.com\\index.html");
+            case3.ShouldContain(Environment.ExpandEnvironmentVariables("%TEMP%"));
+            case4.ShouldBe("%TEMP%");
+            case5.ShouldBe(root);
+            case6.ShouldBe(sampleFile);
         }
 
         [TestMethod]
@@ -44,24 +44,27 @@ namespace Acklann.GlobN.Tests
             var directory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
             // Act
-            var set1 = "*.dll".ResolvePath(directory).ToArray();
-            var set2 = "../../../Tests/*.cs".ResolvePath(directory).ToArray();
-            var set3 = new Glob(sampleFile.Name).ResolvePath("%TEMP%").ToArray();
-            var set4 = sampleFile.FullName.ResolvePath(directory).ToArray();
+            var case1 = "*.dll".ResolvePath(directory).ToArray();
+            var case2 = "../../../Tests/*.cs".ResolvePath(directory).ToArray();
+            var case3 = new Glob(sampleFile.Name).ResolvePath("%TEMP%", true).ToArray();
+            var case4 = sampleFile.FullName.ResolvePath(directory).ToArray();
+            var case5 = $"./TestData/*.txt".ResolvePath(directory).ToArray();
 
             if (sampleFile.Exists) sampleFile.Delete();
 
             // Assert
-            set1.ShouldNotBeEmpty();
-            set1.ShouldAllBe(x => x.EndsWith(".dll"));
+            case1.ShouldNotBeEmpty();
+            case1.ShouldAllBe(x => x.EndsWith(".dll"));
 
-            set2.ShouldNotBeEmpty();
-            set2.ShouldAllBe(x => x.EndsWith(".cs"));
+            case2.ShouldNotBeEmpty();
+            case2.ShouldAllBe(x => x.EndsWith(".cs"));
 
-            set3.ShouldContain(sampleFile.FullName);
+            case3.ShouldContain(sampleFile.FullName);
 
-            set4.Length.ShouldBe(1);
-            set4[0].ShouldBe(sampleFile.FullName);
+            case4.Length.ShouldBe(1);
+            case4[0].ShouldBe(sampleFile.FullName);
+
+            case5.ShouldNotBeEmpty();
 
             Should.Throw<ArgumentNullException>(() => { err.ResolvePath().ToArray(); });
             Should.Throw<DirectoryNotFoundException>(() => { new Glob(sampleFile.Name).ResolvePath("%TEMP%", expandVariables: false).ToArray(); });
@@ -77,7 +80,7 @@ namespace Acklann.GlobN.Tests
             // Act
             var set1 = directory.GetFiles("*.dll").ToArray();
             var set2 = directory.GetFiles("../../../Tests/*.cs").ToArray();
-            var set3 = "%TEMP%".GetFiles(new Glob(sampleFile.Name)).ToArray();
+            var set3 = "%TEMP%".GetFiles(new Glob(sampleFile.Name), true).ToArray();
 
             // Assert
 

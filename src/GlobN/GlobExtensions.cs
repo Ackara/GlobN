@@ -18,7 +18,7 @@ namespace Acklann.GlobN
         /// <param name="directory">The current directory (default: <see cref="Environment.CurrentDirectory"/>).</param>
         /// <param name="expandVariables">if set to <c>true</c> expands the environment variables within the <paramref name="pattern" /> and <paramref name="directory" />.</param>
         /// <returns>A string with each variable replaced by its value.</returns>
-        public static string ExpandPath(this Glob pattern, string directory = null, bool expandVariables = true)
+        public static string ExpandPath(this Glob pattern, string directory = null, bool expandVariables = false)
         {
             return ExpandPath(pattern.ToString(), directory, expandVariables);
         }
@@ -32,26 +32,23 @@ namespace Acklann.GlobN
         /// <returns>The files that match the glob pattern from the directory.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="pattern"/> is null.</exception>
         /// <exception cref="DirectoryNotFoundException"><paramref name="directory" /> do not exist.</exception>
-        public static IEnumerable<string> ResolvePath(this Glob pattern, string directory = null, bool expandVariables = true)
+        public static IEnumerable<string> ResolvePath(this Glob pattern, string directory = null, bool expandVariables = false)
         {
+            if (pattern == null) throw new ArgumentNullException(nameof(pattern));
+
             if (string.IsNullOrEmpty(directory)) directory = Environment.CurrentDirectory;
             if (expandVariables) directory = Environment.ExpandEnvironmentVariables(directory);
+            if (!Directory.Exists(directory)) throw new DirectoryNotFoundException($"Could not find folder at '{directory}'.");
 
-            if (pattern == null) throw new ArgumentNullException(nameof(pattern));
-            else if (!Directory.Exists(directory)) throw new DirectoryNotFoundException($"Could not find '{directory}'.");
-            else if (Path.IsPathRooted(pattern)) yield return pattern.ToString();
-            else
-            {
-                pattern.ExpandVariables = expandVariables;
-                int totalUpOperators = GetUpOperators(pattern, out string notUsed);
-                directory = PathExtensions.MoveUpDirectory(directory, totalUpOperators);
+            pattern.ExpandVariables = expandVariables;
+            directory = PathExtensions.MoveUpDirectory(directory, GetUpOperators(pattern, out string trimmedPattern));
 
-                foreach (var path in Directory.EnumerateFiles(directory, "*", SearchOption.AllDirectories))
+            if (Path.IsPathRooted(pattern)) yield return pattern.ToString();
+            else foreach (string path in Directory.EnumerateFiles(Path.Combine(directory, GetDeepestFolder(trimmedPattern)), "*", SearchOption.AllDirectories))
                     if (pattern.IsMatch(path))
                     {
                         yield return path;
                     }
-            }
         }
 
         /* String */
@@ -63,7 +60,7 @@ namespace Acklann.GlobN
         /// <param name="directory">The current directory (default: <see cref="Environment.CurrentDirectory"/>).</param>
         /// <param name="expandVariables">if set to <c>true</c> expands the environment variables within the <paramref name="relativePath" /> and <paramref name="directory" />.</param>
         /// <returns>A string with each variable replaced by its value.</returns>
-        public static string ExpandPath(this string relativePath, string directory = null, bool expandVariables = true)
+        public static string ExpandPath(this string relativePath, string directory = null, bool expandVariables = false)
         {
             if (string.IsNullOrEmpty(directory)) directory = Environment.CurrentDirectory;
 
@@ -83,7 +80,7 @@ namespace Acklann.GlobN
         /// <returns>The files that match the glob pattern from the directory.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="pattern" /> is null.</exception>
         /// <exception cref="DirectoryNotFoundException"><paramref name="directory" /> do not exist.</exception>
-        public static IEnumerable<string> GetFiles(this string directory, Glob pattern, bool expandVariables = true)
+        public static IEnumerable<string> GetFiles(this string directory, Glob pattern, bool expandVariables = false)
         {
             return ResolvePath(pattern, directory, expandVariables);
         }
@@ -97,7 +94,7 @@ namespace Acklann.GlobN
         /// <returns>The files that match the glob pattern from the directory.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="pattern"/> is null.</exception>
         /// <exception cref="DirectoryNotFoundException"><paramref name="directory" /> do not exist.</exception>
-        public static IEnumerable<string> ResolvePath(this string pattern, string directory = null, bool expandVariables = true)
+        public static IEnumerable<string> ResolvePath(this string pattern, string directory = null, bool expandVariables = false)
         {
             return ResolvePath(new Glob(pattern), directory, expandVariables);
         }
@@ -113,7 +110,7 @@ namespace Acklann.GlobN
         /// <returns>The files that match the glob pattern from the directory.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="pattern"/> is null.</exception>
         /// <exception cref="DirectoryNotFoundException"><paramref name="directory" /> do not exist.</exception>
-        public static IEnumerable<FileInfo> GetFiles(this DirectoryInfo directory, Glob pattern, bool expandVariables = true)
+        public static IEnumerable<FileInfo> GetFiles(this DirectoryInfo directory, Glob pattern, bool expandVariables = false)
         {
             foreach (var filePath in ResolvePath(pattern, directory.FullName, expandVariables))
             {
@@ -138,7 +135,7 @@ namespace Acklann.GlobN
             }
         }
 
-        #region Private Members
+        /* ===== */
 
         internal static bool IsWildcard(this char character)
         {
@@ -157,7 +154,7 @@ namespace Acklann.GlobN
             else
             {
                 char i, ii, iii = '\0';
-                int counter = 0, n = 0;
+                int ctr = 0, n = 0;
 
                 do
                 {
@@ -165,14 +162,38 @@ namespace Acklann.GlobN
                     ii = (n >= 1) ? relativePath[n - 1] : '\0';
                     iii = relativePath[n];
 
-                    if (i == '.' && ii == '.' && (iii == '\\' || iii == '/')) counter++;
+                    if (i == '.' && ii == '.' && (iii == '\\' || iii == '/')) ctr++;
                 } while (((iii == '.' || iii == '\\' || iii == '/')) && ++n < relativePath.Length);
 
                 trimmedPath = relativePath.Substring(n, (relativePath.Length - n));
-                return counter;
+                return ctr;
             }
         }
 
-        #endregion Private Members
+        internal static string GetDeepestFolder(this string pattern)
+        {
+            int i, sep = 0;
+            for (i = 0; i < pattern.Length; i++)
+            {
+                if (IsDirectorySeparator(pattern[i])) sep = i;
+                else if (isaClass(pattern[i])) break;
+            }
+
+            return pattern.Substring(0, sep);
+
+            bool isaClass(char c)
+            {
+                switch (c)
+                {
+                    case '*':
+                    case '?':
+                    case '!':
+                        return true;
+
+                    default:
+                        return false;
+                }
+            }
+        }
     }
 }

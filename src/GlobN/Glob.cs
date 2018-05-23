@@ -13,24 +13,10 @@ namespace Acklann.GlobN
         /// </summary>
         /// <param name="pattern">The pattern.</param>
         /// <exception cref="System.ArgumentNullException">pattern</exception>
-        public Glob(string pattern) : this(pattern, false)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Glob" /> class.
-        /// </summary>
-        /// <param name="pattern">The pattern.</param>
-        /// <param name="throwIfInvalid">if set to <c>true</c> an exception will be thrown if the pattern is illegal, when <see cref="IsMatch(string)" /> is invoked instead of returning false.</param>
-        /// <exception cref="System.ArgumentNullException">pattern</exception>
-        /// <remarks>For performance, the <paramref name="pattern" /> does not get examined until the <see cref="IsMatch(string)" /> method is invoked.
-        /// Therefore the if the <paramref name="throwIfInvalid" /> is set to <c>true</c> and the pattern is indeed illegal,
-        /// an exception won't be thrown until the method is invoked. If <paramref name="throwIfInvalid" /> remains as <c>false</c>
-        /// the <see cref="IsMatch(string)" /> will return <c>false</c> instead of throwing an exception.</remarks>
-        public Glob(string pattern, bool throwIfInvalid)
+        public Glob(string pattern)
         {
             _pattern = pattern ?? throw new System.ArgumentNullException(nameof(pattern));
-            ThrowIfInvalid = throwIfInvalid;
+            ThrowIfInvalid = false;
         }
 
         internal State State;
@@ -171,7 +157,7 @@ RULES:
         /// <returns>The result of the conversion.</returns>
         public static implicit operator Glob(string pattern)
         {
-            return new Glob(pattern, false);
+            return new Glob(pattern);
         }
 
         /// <summary>

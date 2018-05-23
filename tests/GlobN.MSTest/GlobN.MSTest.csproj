@@ -20,4 +20,10 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\GlobN\GlobN.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Update="TestData\sample.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>
