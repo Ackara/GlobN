@@ -8,7 +8,7 @@ namespace Acklann.GlobN
     /// </summary>
     public static class PathExtensions
     {
-        private static readonly string _moveUp = string.Concat("..", Path.DirectorySeparatorChar);
+        private static readonly string _moveUp = (".." + Path.DirectorySeparatorChar);
 
         /// <summary>
         /// Returns the relative path from specified directory.

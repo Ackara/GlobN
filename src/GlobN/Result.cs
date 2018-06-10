@@ -1,5 +1,6 @@
 ﻿namespace Acklann.GlobN
 {
+    [System.Diagnostics.DebuggerDisplay("{ToDebuggerDisplay()}")]
     internal struct Result
     {
         public Result(bool continueMatching, bool? patternMatchingComplete)
@@ -14,5 +15,12 @@
 
         public readonly bool ContinuePatternMatching;
         public readonly bool? PatternIsMatch;
+
+        public string ToDebuggerDisplay()
+        {
+            if (ContinuePatternMatching) return "coninuing";
+            else if (PatternIsMatch ?? false) return "match found";
+            else return "undetermined";
+        }
     }
 }

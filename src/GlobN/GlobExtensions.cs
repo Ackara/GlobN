@@ -43,12 +43,11 @@ namespace Acklann.GlobN
             pattern.ExpandVariables = expandVariables;
             directory = PathExtensions.MoveUpDirectory(directory, GetUpOperators(pattern, out string trimmedPattern));
 
-            if (Path.IsPathRooted(pattern)) yield return pattern.ToString();
-            else foreach (string path in Directory.EnumerateFiles(Path.Combine(directory, GetDeepestFolder(trimmedPattern)), "*", SearchOption.AllDirectories))
-                    if (pattern.IsMatch(path))
-                    {
-                        yield return path;
-                    }
+            foreach (string path in Directory.EnumerateFiles(Path.Combine(directory, GetDeepestFolder(trimmedPattern)), "*", SearchOption.AllDirectories))
+                if (pattern.IsMatch(path))
+                {
+                    yield return path;
+                }
         }
 
         /* String */
@@ -136,6 +135,20 @@ namespace Acklann.GlobN
         }
 
         /* ===== */
+
+        internal static bool IsaPattern(this string value)
+        {
+            for (int i = 0; i < value.Length; i++)
+                switch (value[i])
+                {
+                    case '*':
+                    case '?':
+                    case '!':
+                        return true;
+                }
+
+            return false;
+        }
 
         internal static bool IsWildcard(this char character)
         {

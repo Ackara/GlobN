@@ -49,6 +49,7 @@ namespace Acklann.GlobN.Tests
             var case3 = new Glob(sampleFile.Name).ResolvePath("%TEMP%", true).ToArray();
             var case4 = sampleFile.FullName.ResolvePath(directory).ToArray();
             var case5 = $"./TestData/*.txt".ResolvePath(directory).ToArray();
+            var case6 = $"{directory}\\*deps*".ResolvePath(directory).ToArray();
 
             if (sampleFile.Exists) sampleFile.Delete();
 
@@ -65,6 +66,7 @@ namespace Acklann.GlobN.Tests
             case4[0].ShouldBe(sampleFile.FullName);
 
             case5.ShouldNotBeEmpty();
+            case6.Length.ShouldBe(2);
 
             Should.Throw<ArgumentNullException>(() => { err.ResolvePath().ToArray(); });
             Should.Throw<DirectoryNotFoundException>(() => { new Glob(sampleFile.Name).ResolvePath("%TEMP%", expandVariables: false).ToArray(); });
