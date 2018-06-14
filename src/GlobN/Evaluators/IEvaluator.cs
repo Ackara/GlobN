@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Acklann.GlobN.Evaluators
+﻿namespace Acklann.GlobN.Evaluators
 {
-    public interface IEvaluator
+    internal interface IEvaluator
     {
-        bool IsMatch();
+        void Step(in Glob context);
+
+        IEvaluator Change(in Glob contet, char p);
+
+        bool? Evaluate(in Glob context, char p, char v);
     }
 }

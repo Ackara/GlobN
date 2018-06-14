@@ -18,8 +18,8 @@
 
         public string ToDebuggerDisplay()
         {
-            if (ContinuePatternMatching) return "coninuing";
-            else if (PatternIsMatch ?? false) return "match found";
+            if (ContinuePatternMatching) return "continuing";
+            else if (PatternIsMatch ?? false) return "match-found";
             else return "undetermined";
         }
     }

@@ -29,8 +29,8 @@ namespace Acklann.GlobN.Tests
         // Plain Text <DefaultState>
 
         [DataTestMethod, TestCategory("Plain-Text")]
-        [DataRow(@"C:\folder\file.txt", "")]
         [DataRow("C:/folder/file.txt", "folder/")]
+        [DataRow(@"C:\folder\file.txt", "")]
         [DataRow("C:/folder/file.txt", "file.txt")]
         [DataRow("C:/folder/file.txt", "folder/file.txt")]
         public void IsMatch_should_accept_a_plain_text_pattern(string filePath, string pattern)
@@ -73,22 +73,22 @@ namespace Acklann.GlobN.Tests
         // Wildcard (*) <WildcardState>
 
         [DataTestMethod, TestCategory("Wildcard '*'")]
-        //[DataRow(@"C:\folder\file.txt", "*")]
-        //[DataRow(@"C:\folder\file.txt", "*.*")]
-        //[DataRow(@"C:\folder\file.txt", "*/*.*")]
-        //[DataRow(@"C:\folder\file.txt", "*.txt")]
-        //[DataRow(@"C:\folder\file.txt", "file.*")]
-        //[DataRow(@"/folder/file.txt", "*/file.txt")]
-        //[DataRow(@"C:\folder\file.txt", "file*.txt")]
-        //[DataRow(@"C:\folder\file01.txt", "file*.txt")]
-        //[DataRow(@"/folder/file.txt", "*/f*i*l*e*tx*")]
-        //[DataRow(@"C:\folder\file01.txt", "*file*.txt")]
-        //[DataRow(@"C:\root\folder\file.txt", "*/*/*.*")]
-        //[DataRow(@"C:\folder\sub\file.txt", "folder/*/*.*")]
+        [DataRow(@"C:\folder\file.txt", "*")]
+        [DataRow(@"C:\folder\file.txt", "*.*")]
+        [DataRow(@"C:\folder\file.txt", "*/*.*")]
+        [DataRow(@"C:\folder\file.txt", "*.txt")]
+        [DataRow(@"C:\folder\file.txt", "file.*")]
+        [DataRow(@"/folder/file.txt", "*/file.txt")]
+        [DataRow(@"C:\folder\file.txt", "file*.txt")]
+        [DataRow(@"C:\folder\file01.txt", "file*.txt")]
+        [DataRow(@"/folder/file.txt", "*/f*i*l*e*tx*")]
+        [DataRow(@"C:\folder\file01.txt", "*file*.txt")]
+        [DataRow(@"C:\root\folder\file.txt", "*/*/*.*")]
+        [DataRow(@"C:\folder\sub\file.txt", "folder/*/*.*")]
         [DataRow(@"app/bin/foo.deps.json", @"/app/bin/*deps*")]
-        //[DataRow("/folder/sub/file.txt", "folder/*/file.txt")]
-        //[DataRow(@"C:\folder\sub\file.txt", "folder/*u*/file.txt")]
-        //[DataRow(@"C:\folder\sub\file.txt", @"C:\*folder\sub\file.txt")]
+        [DataRow("/folder/sub/file.txt", "folder/*/file.txt")]
+        [DataRow(@"C:\folder\sub\file.txt", "folder/*u*/file.txt")]
+        [DataRow(@"C:\folder\sub\file.txt", @"C:\*folder\sub\file.txt")]
         public void IsMatch_should_accept_a_wildcard_pattern(string filePath, string pattern)
         {
             RunIsMatchTest(pattern, filePath, shouldBe: true);

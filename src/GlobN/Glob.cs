@@ -1,4 +1,5 @@
-﻿using Acklann.GlobN.States;
+﻿using Acklann.GlobN.Evaluators;
+using Acklann.GlobN.States;
 
 namespace Acklann.GlobN
 {
@@ -21,6 +22,7 @@ namespace Acklann.GlobN
 
         internal State State;
         internal bool ThrowIfInvalid;
+        internal IEvaluator Evaluator;
         internal bool ExpandVariables;
         internal bool PatternIsIllegal;
 
@@ -46,7 +48,7 @@ namespace Acklann.GlobN
         /// <param name="path">The file path.</param>
         /// <param name="pattern">The glob pattern.</param>
         /// <returns><c>true</c> if the specified path match the pattern; otherwise, <c>false</c>.</returns>
-        public static bool IsMatch(in string path, string pattern)
+        public static bool IsMatch(string path, string pattern)
         {
             return new Glob(pattern).IsMatch(path);
         }
@@ -56,7 +58,7 @@ namespace Acklann.GlobN
         /// </summary>
         /// <param name="absolutePath">The absolute file path.</param>
         /// <returns><c>true</c> if the specified absolute path is match this expression; otherwise, <c>false</c>.</returns>
-        public bool IsMatch(in string absolutePath)
+        public bool IsMatch(string absolutePath)
         {
             if (string.IsNullOrEmpty(_pattern)
                 || _pattern == "*"
@@ -64,8 +66,8 @@ namespace Acklann.GlobN
             else if (string.IsNullOrEmpty(absolutePath) || PatternIsIllegal) return false;
 
             // Initializing the glob's state
-            State = new DefaultState();
-            State.Initialize(this);
+            bool negate = _pattern[0] == '!';
+            if (Evaluator == null) Evaluator = DefaultEvaluator.Instance;
 
             Value = absolutePath;
             V = (Value.Length - 1);
@@ -76,13 +78,13 @@ namespace Acklann.GlobN
             // Evaluating if the pattern matches the value/path.
             do
             {
-                State.Change(Pattern[P]);
-                Result result = State.Evaluate(char.ToLowerInvariant(Pattern[P]), char.ToLowerInvariant(Value[V]));
+                Evaluator.Change(this, Pattern[P]);
+                bool? result = Evaluator.Evaluate(this, char.ToLowerInvariant(Pattern[P]), char.ToLowerInvariant(Value[V]));
 
                 if (PatternIsIllegal) return false;
-                else if (result.PatternIsMatch != null) return (result.PatternIsMatch ?? false) == !_negate;
-                else if (result.ContinuePatternMatching == false) return false == !_negate;
-                else State.Step();
+                else if (result == true) return (!negate);
+                else if (result == false) return (!!negate);
+                else Evaluator.Step(this);
             } while (true);
         }
 
@@ -94,6 +96,8 @@ namespace Acklann.GlobN
         {
             return _pattern;
         }
+
+        #region IEquatable
 
         /// <summary>
         /// Determines whether the specified <see cref="Glob" /> is equal to this instance.
@@ -110,7 +114,7 @@ namespace Acklann.GlobN
         /// </summary>
         /// <param name="pattern">An string to compare with this expression.</param>
         /// <returns><c>true</c> if the specified <paramref name="pattern"/> is equal to this instance; otherwise, <c>false</c>.</returns>
-        public bool Equals(in string pattern)
+        public bool Equals(string pattern)
         {
             return _pattern == pattern;
         }
@@ -135,18 +139,7 @@ namespace Acklann.GlobN
             return _pattern.GetHashCode();
         }
 
-        internal string FormatError(string errorMsg)
-        {
-            // TODO: Define rules.
-            errorMsg = string.Format(@"
-The pattern '{0}' is not well-formed. {1}.
-
-RULES:
-", _pattern, errorMsg);
-
-            System.Diagnostics.Debug.WriteLine(errorMsg);
-            return errorMsg;
-        }
+        #endregion IEquatable
 
         #region Operators
 
@@ -197,15 +190,26 @@ RULES:
         #region Private Members
 
         private readonly string _pattern;
-        private bool _negate;
         private int _p, _v;
+
+        internal string FormatError(string errorMsg)
+        {
+            // TODO: Define rules.
+            errorMsg = string.Format(@"
+The pattern '{0}' is not well-formed. {1}.
+
+RULES:
+", _pattern, errorMsg);
+
+            System.Diagnostics.Debug.WriteLine(errorMsg);
+            return errorMsg;
+        }
 
         private string GetNormalizedPattern()
         {
             string pattern;
             if (_pattern[0] == '!')
             {
-                _negate = true;
                 pattern = ExpandVariables ? System.Environment.ExpandEnvironmentVariables(_pattern.Substring(1, _pattern.Length - 1)) : _pattern.Substring(1, _pattern.Length - 1);
             }
             else pattern = ExpandVariables ? System.Environment.ExpandEnvironmentVariables(_pattern) : _pattern;
