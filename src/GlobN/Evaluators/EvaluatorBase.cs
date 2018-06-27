@@ -4,14 +4,11 @@
     {
         public const char NULL_CHAR = '\0';
 
-        public abstract bool? Evaluate(in Glob context, char p, char v);
+        public abstract void Initialize(in Glob context, in char p);
+
+        public abstract Outcome Evaluate(in Glob context, in char p, in char v);
 
         /* ***** */
-
-        public virtual IEvaluator Change(in Glob context, char p)
-        {
-            return GetEvaluator(context, p);
-        }
 
         public virtual void Step(in Glob context)
         {
@@ -19,48 +16,41 @@
             context.V--;
         }
 
-        protected bool AtEndOfValue(in Glob context)
+        public virtual void Change(in Glob context, in char p)
         {
-            return context.V == 0;
+            if (context != null)
+                switch (p)
+                {
+                    default:
+                        context.E = DefaultEvaluator.Id; /* default: 0 */
+                        if (context.State == null) context.State = new DefaultEvaluator();
+                        break;
+
+                    case '*':
+                        if (context.CharAt(-1) == '*')
+                        {
+                            context.E = DirectoryWildcardEvaluator.Id;
+                            if (context.State == null) context.State = new DirectoryWildcardEvaluator();
+                        }
+                        else
+                        {
+                            context.E = WildcardEvaluator.Id;
+                            if (context.State == null) context.State = new WildcardEvaluator();
+                        }
+                        break;
+
+                    case '?':
+                        context.E = CharacterWildCardEvaluator.Id;
+                        if (context.State == null) context.State = new CharacterWildCardEvaluator();
+                        break;
+                }
         }
 
-        protected bool AtEndOfPattern(in Glob context)
-        {
-            { return context.P == 0; }
-        }
-
-        protected virtual bool EquateCharacters(char p, char v)
+        internal virtual bool EquateCharacters(in Glob context, char p, char v)
         {
             if (p == '/' && v == '\\') return true;
             else if (p == '\\' && v == '/') return true;
             else return p == v;
-        }
-
-        protected char CharAt(in Glob context, int position)
-        {
-            int index = context.P + position;
-            return (index >= 0 && index <= (context.Pattern.Length - 1)) ? context.Pattern[index] : NULL_CHAR;
-        }
-
-        protected IEvaluator GetEvaluator(in Glob context, char p)
-        {
-            IEvaluator next;
-            switch (p)
-            {
-                default:
-                    next = DefaultEvaluator.Instance;
-                    break;
-
-                case '*':
-                    next = WildcardEvaluator.Instance;
-                    break;
-
-                case '?':
-                    next = CharacterWildCardEvaluator.Instance;
-                    break;
-            }
-
-            return next;
         }
     }
 }

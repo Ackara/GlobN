@@ -2,37 +2,27 @@
 {
     internal class DefaultEvaluator : EvaluatorBase
     {
-        protected DefaultEvaluator()
+        public static readonly int Id = 0;
+
+        public override Outcome Evaluate(in Glob context, in char p, in char v)
         {
-        }
+            bool charsAreEqual = EquateCharacters(context, p, v);
+            if (v.IsDirectorySeparator() && p.IsDirectorySeparator()) context.ShouldIgnoreNextSegment = false;
 
-        public override bool? Evaluate(in Glob context, char p, char v)
-        {
-            bool charactersAreEqual = EquateCharacters(p, v);
-
-            if (context.PatternIsIllegal) return false;
-            else if (charactersAreEqual == false) return false;
-            else if (AtEndOfValue(context) && !AtEndOfPattern(context)) return false;
-            else if (charactersAreEqual && AtEndOfPattern(context)) return true;
-            else return null;
-        }
-
-        #region Singleton
-
-        public static DefaultEvaluator Instance
-        {
-            get { return Nested._instance; }
-        }
-
-        private class Nested
-        {
-            static Nested()
+            if (context.PatternIsIllegal || (charsAreEqual == false && context.ShouldIgnoreNextSegment == false) || (context.AtEndOfValue && !context.AtEndOfPattern)) return Outcome.MatchFailed;
+            else if (charsAreEqual && context.AtEndOfPattern) return Outcome.MatchFound;
+            else if (charsAreEqual == false && context.ShouldIgnoreNextSegment)
             {
+                if (v.IsDirectorySeparator() == false) context.JumptoNextSegment();
+                context.P = context.R;
+                return Outcome.Continue;
             }
 
-            internal static readonly DefaultEvaluator _instance = new DefaultEvaluator();
+            return Outcome.Continue;
         }
 
-        #endregion Singleton
+        public override void Initialize(in Glob context, in char p)
+        {
+        }
     }
 }

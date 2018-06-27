@@ -160,29 +160,6 @@ namespace Acklann.GlobN
             return character == '\\' || character == '/';
         }
 
-        internal static int GetUpOperators(this string relativePath, out string trimmedPath)
-        {
-            trimmedPath = relativePath;
-            if (string.IsNullOrEmpty(relativePath)) return 0;
-            else
-            {
-                char i, ii, iii = '\0';
-                int ctr = 0, n = 0;
-
-                do
-                {
-                    i = (n >= 2) ? relativePath[n - 2] : '\0';
-                    ii = (n >= 1) ? relativePath[n - 1] : '\0';
-                    iii = relativePath[n];
-
-                    if (i == '.' && ii == '.' && (iii == '\\' || iii == '/')) ctr++;
-                } while (((iii == '.' || iii == '\\' || iii == '/')) && ++n < relativePath.Length);
-
-                trimmedPath = relativePath.Substring(n, (relativePath.Length - n));
-                return ctr;
-            }
-        }
-
         internal static string GetDeepestFolder(this string pattern)
         {
             int i, sep = 0;
@@ -206,6 +183,29 @@ namespace Acklann.GlobN
                     default:
                         return false;
                 }
+            }
+        }
+
+        internal static int GetUpOperators(this string relativePath, out string trimmedPath)
+        {
+            trimmedPath = relativePath;
+            if (string.IsNullOrEmpty(relativePath)) return 0;
+            else
+            {
+                char i, ii, iii = '\0';
+                int ctr = 0, n = 0;
+
+                do
+                {
+                    i = (n >= 2) ? relativePath[n - 2] : '\0';
+                    ii = (n >= 1) ? relativePath[n - 1] : '\0';
+                    iii = relativePath[n];
+
+                    if (i == '.' && ii == '.' && (iii == '\\' || iii == '/')) ctr++;
+                } while (((iii == '.' || iii == '\\' || iii == '/')) && ++n < relativePath.Length);
+
+                trimmedPath = relativePath.Substring(n, (relativePath.Length - n));
+                return ctr;
             }
         }
     }

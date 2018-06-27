@@ -2,43 +2,46 @@
 {
     internal class WildcardEvaluator : DefaultEvaluator
     {
-        public override bool? Evaluate(in Glob context, char p, char v)
-        {
-            char next = CharAt(context, -1);
-            bool charactersAreEqual = base.EquateCharacters(next, v);
+        public new static readonly int Id = 1;
 
-            return base.Evaluate(context, CharAt(context, -1), v);
+        public override void Change(in Glob context, in char p)
+        {
+            if (p.IsWildcard() || p.IsDirectorySeparator()) base.Change(context, p);
         }
 
-        public override void Step(in Glob context)
+        public override void Initialize(in Glob context, in char p)
         {
-
-
-            base.Step(context);
-        }
-
-        #region Singleton
-
-        public new static WildcardEvaluator Instance
-        {
-            get { return Nested._instance; }
-        }
-
-        private class Nested
-        {
-            static Nested()
+            if (p == '*')
             {
-            }
+                char nextChar = context.CharAt(-1);
+                context.PatternIsIllegal = nextChar.IsWildcard();
 
-            internal static readonly WildcardEvaluator _instance = new WildcardEvaluator();
+                if (nextChar.IsDirectorySeparator())
+                {
+                    context.P--;
+                    context.JumptoNextSegment();
+                    base.Change(context, nextChar);
+                }
+                else
+                {
+                    _resetIdx = context.P;
+                    context.P--;
+                }
+            }
         }
 
-        #endregion Singleton
+        internal override bool EquateCharacters(in Glob context, char p, char v)
+        {
+            if (p == '*') return true;
+            else if (v.IsDirectorySeparator() && p.IsDirectorySeparator() == false) return false;
+            else if (base.EquateCharacters(context, p, v) == false) context.P = _resetIdx;
+
+            return true;
+        }
 
         #region Private Members
 
-        private int _index;
-        private bool _statisfied;
+        private int _resetIdx;
 
         #endregion Private Members
     }

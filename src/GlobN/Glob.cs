@@ -1,5 +1,5 @@
 ﻿using Acklann.GlobN.Evaluators;
-using Acklann.GlobN.States;
+using System.Linq;
 
 namespace Acklann.GlobN
 {
@@ -17,14 +17,28 @@ namespace Acklann.GlobN
         public Glob(string pattern)
         {
             _pattern = pattern ?? throw new System.ArgumentNullException(nameof(pattern));
-            ThrowIfInvalid = false;
+            Evaluators = new IEvaluator[4];
         }
 
-        internal State State;
-        internal bool ThrowIfInvalid;
-        internal IEvaluator Evaluator;
-        internal bool ExpandVariables;
-        internal bool PatternIsIllegal;
+        internal int E, R;
+        internal IEvaluator[] Evaluators;
+        internal bool PatternIsIllegal, ShouldIgnoreNextSegment, ExpandVariables;
+
+        internal bool AtEndOfPattern
+        {
+            get { return P == 0; }
+        }
+
+        internal bool AtEndOfValue
+        {
+            get { return V == 0; }
+        }
+
+        internal IEvaluator State
+        {
+            get { return Evaluators[E]; }
+            set { Evaluators[E] = value; }
+        }
 
         internal int P
         {
@@ -60,14 +74,14 @@ namespace Acklann.GlobN
         /// <returns><c>true</c> if the specified absolute path is match this expression; otherwise, <c>false</c>.</returns>
         public bool IsMatch(string absolutePath)
         {
-            if (string.IsNullOrEmpty(_pattern)
-                || _pattern == "*"
-                || _pattern == absolutePath) return true;
-            else if (string.IsNullOrEmpty(absolutePath) || PatternIsIllegal) return false;
+            if (PatternIsIllegal || string.IsNullOrEmpty(absolutePath)) return false;
+            else if (string.IsNullOrEmpty(_pattern)
+                    || _pattern == "*"
+                    || _pattern == absolutePath) return true;
 
             // Initializing the glob's state
             bool negate = _pattern[0] == '!';
-            if (Evaluator == null) Evaluator = DefaultEvaluator.Instance;
+            if (State == null) Evaluators[DefaultEvaluator.Id] = new DefaultEvaluator();
 
             Value = absolutePath;
             V = (Value.Length - 1);
@@ -78,13 +92,33 @@ namespace Acklann.GlobN
             // Evaluating if the pattern matches the value/path.
             do
             {
-                Evaluator.Change(this, Pattern[P]);
-                bool? result = Evaluator.Evaluate(this, char.ToLowerInvariant(Pattern[P]), char.ToLowerInvariant(Value[V]));
+                State.Change(this, Pattern[P]);
+                State.Initialize(this, Pattern[P]);
+                Outcome result = State.Evaluate(this, char.ToLowerInvariant(Pattern[P]), char.ToLowerInvariant(Value[V]));
+#if DEBUG
+                string placeholder(int index, char c = '●') => string.Concat(Enumerable.Repeat(c, index));
 
+                System.Diagnostics.Debug.WriteLine($"p    | {Pattern}");
+                System.Diagnostics.Debug.WriteLine($"p({Pattern[P]}) | {placeholder(P)}{Pattern.Substring(P)}");
+                System.Diagnostics.Debug.WriteLine("");
+                System.Diagnostics.Debug.WriteLine($"v    | {Value}");
+                System.Diagnostics.Debug.WriteLine($"v({Value[V]}) | {placeholder(V)}{Value.Substring(V)}");
+                System.Diagnostics.Debug.WriteLine($"===== {result} =====");
+#endif
                 if (PatternIsIllegal) return false;
-                else if (result == true) return (!negate);
-                else if (result == false) return (!!negate);
-                else Evaluator.Step(this);
+                else switch (result)
+                    {
+                        default:
+                        case Outcome.Continue:
+                            State.Step(this);
+                            break;
+
+                        case Outcome.MatchFound:
+                            return !negate;
+
+                        case Outcome.MatchFailed:
+                            return !!negate;
+                    }
             } while (true);
         }
 
@@ -95,6 +129,23 @@ namespace Acklann.GlobN
         public override string ToString()
         {
             return _pattern;
+        }
+
+        internal char CharAt(int position)
+        {
+            int index = P + position;
+            return (index >= 0 && index <= (Pattern.Length - 1)) ? Pattern[index] : '\0';
+        }
+
+        internal void JumptoNextSegment()
+        {
+            int tmp = V;
+
+            while (tmp > 0 && Value[tmp].IsDirectorySeparator() == false)
+                if (Value[--tmp].IsDirectorySeparator())
+                {
+                    V = tmp;
+                }
         }
 
         #region IEquatable
@@ -168,10 +219,10 @@ namespace Acklann.GlobN
         /// </summary>
         /// <param name="a">The first <see cref="Glob"/> to compare, or null.</param>
         /// <param name="b">The second <see cref="Glob"/> to compare, or null.</param>
-        /// <returns><c>true</c> if the value of <paramref name="a"/> is the same as the value of <paramref name="b"/>; otherwise, <c>false</c>.</returns>
-        public static bool operator ==(Glob a, Glob b)
+        /// <returns><c>true</c> if the value of <paramref name="a"/> is different from the value of <paramref name="b"/>; otherwise, <c>false</c>.</returns>
+        public static bool operator !=(Glob a, Glob b)
         {
-            return a?._pattern == b?._pattern;
+            return (a?._pattern == b?._pattern) == false;
         }
 
         /// <summary>
@@ -179,10 +230,10 @@ namespace Acklann.GlobN
         /// </summary>
         /// <param name="a">The first <see cref="Glob"/> to compare, or null.</param>
         /// <param name="b">The second <see cref="Glob"/> to compare, or null.</param>
-        /// <returns><c>true</c> if the value of <paramref name="a"/> is different from the value of <paramref name="b"/>; otherwise, <c>false</c>.</returns>
-        public static bool operator !=(Glob a, Glob b)
+        /// <returns><c>true</c> if the value of <paramref name="a"/> is the same as the value of <paramref name="b"/>; otherwise, <c>false</c>.</returns>
+        public static bool operator ==(Glob a, Glob b)
         {
-            return (a?._pattern == b?._pattern) == false;
+            return a?._pattern == b?._pattern;
         }
 
         #endregion Operators
@@ -191,19 +242,6 @@ namespace Acklann.GlobN
 
         private readonly string _pattern;
         private int _p, _v;
-
-        internal string FormatError(string errorMsg)
-        {
-            // TODO: Define rules.
-            errorMsg = string.Format(@"
-The pattern '{0}' is not well-formed. {1}.
-
-RULES:
-", _pattern, errorMsg);
-
-            System.Diagnostics.Debug.WriteLine(errorMsg);
-            return errorMsg;
-        }
 
         private string GetNormalizedPattern()
         {
@@ -236,7 +274,7 @@ RULES:
                 pattern = $"{pattern}**\\*";
             }
 
-            if (pattern[0].IsDirectorySeparator() == false)
+            if (pattern[0].IsDirectorySeparator() == false && (n > 2 && pattern[1] != ':')/* drive letter not specified */)
             {
                 pattern = '\\' + pattern;
             }

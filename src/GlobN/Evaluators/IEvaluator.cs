@@ -4,8 +4,10 @@
     {
         void Step(in Glob context);
 
-        IEvaluator Change(in Glob contet, char p);
+        void Change(in Glob context, in char p);
 
-        bool? Evaluate(in Glob context, char p, char v);
+        void Initialize(in Glob context, in char p);
+
+        Outcome Evaluate(in Glob context, in char p, in char v);
     }
 }
