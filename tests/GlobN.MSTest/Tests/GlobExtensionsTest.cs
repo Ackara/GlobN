@@ -66,7 +66,7 @@ namespace Acklann.GlobN.Tests
             case4[0].ShouldBe(sampleFile.FullName);
 
             case5.ShouldNotBeEmpty();
-            case6.Length.ShouldBe(2);
+            case6.Length.ShouldBe(1);
 
             Should.Throw<ArgumentNullException>(() => { err.ResolvePath().ToArray(); });
             Should.Throw<DirectoryNotFoundException>(() => { new Glob(sampleFile.Name).ResolvePath("%TEMP%", expandVariables: false).ToArray(); });
