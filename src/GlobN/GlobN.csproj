@@ -44,7 +44,4 @@ Features:
       <Visible>false</Visible>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="System.Memory" Version="4.5.1" />
-  </ItemGroup>
 </Project>

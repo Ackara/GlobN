@@ -46,7 +46,7 @@ namespace Acklann.GlobN.Tests
             // Act
             var case1 = "*.dll".ResolvePath(directory).ToArray();
             var case2 = "../../../Tests/*.cs".ResolvePath(directory).ToArray();
-            var case3 = new Glob(sampleFile.Name).ResolvePath("%TEMP%", true).ToArray();
+            var case3 = new Glob(sampleFile.Name).ResolvePath("%TEMP%", expandVariables: true).ToArray();
             var case4 = sampleFile.FullName.ResolvePath(directory).ToArray();
             var case5 = $"./TestData/*.txt".ResolvePath(directory).ToArray();
             var case6 = $"{directory}\\*deps*".ResolvePath(directory).ToArray();
@@ -82,7 +82,7 @@ namespace Acklann.GlobN.Tests
             // Act
             var set1 = directory.GetFiles("*.dll").ToArray();
             var set2 = directory.GetFiles("../../../Tests/*.cs").ToArray();
-            var set3 = "%TEMP%".GetFiles(new Glob(sampleFile.Name), true).ToArray();
+            var set3 = "%TEMP%".GetFiles(new Glob(sampleFile.Name), expandVariables: true).ToArray();
 
             // Assert
 
