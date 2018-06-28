@@ -22,23 +22,7 @@ namespace Acklann.GlobN
 
         internal int E, R;
         internal IEvaluator[] Evaluators;
-        internal bool PatternIsIllegal, ShouldIgnoreNextSegment, ExpandVariables;
-
-        internal bool AtEndOfPattern
-        {
-            get { return P == 0; }
-        }
-
-        internal bool AtEndOfValue
-        {
-            get { return V == 0; }
-        }
-
-        internal IEvaluator State
-        {
-            get { return Evaluators[E]; }
-            set { Evaluators[E] = value; }
-        }
+        internal bool PatternIsIllegal, ShouldIgnoreNextSegment;
 
         internal int P
         {
@@ -56,13 +40,29 @@ namespace Acklann.GlobN
 
         internal string Value { get; private set; }
 
+        internal bool AtEndOfPattern
+        {
+            get { return P == 0; }
+        }
+
+        internal bool AtEndOfValue
+        {
+            get { return V == 0; }
+        }
+
+        internal IEvaluator State
+        {
+            get { return Evaluators[E]; }
+            set { Evaluators[E] = value; }
+        }
+
         /// <summary>
         /// Indicates whether the specified glob expression finds a match in the specified path.
         /// </summary>
-        /// <param name="path">The file path.</param>
+        /// <param name="path">The absolute file path.</param>
         /// <param name="pattern">The glob pattern.</param>
         /// <returns><c>true</c> if the specified path match the pattern; otherwise, <c>false</c>.</returns>
-        public static bool IsMatch(string path, string pattern)
+        public static bool IsMatch(in string path, in string pattern)
         {
             return new Glob(pattern).IsMatch(path);
         }
@@ -70,23 +70,24 @@ namespace Acklann.GlobN
         /// <summary>
         /// Determines whether the specified path matches this expression.
         /// </summary>
-        /// <param name="absolutePath">The absolute file path.</param>
+        /// <param name="path">The absolute file path.</param>
+        /// <param name="expandVariables">Determines whether to replace the name of each environment variable embedded in the specified path with the string equivalent of the value of the variable.</param>
         /// <returns><c>true</c> if the specified absolute path is match this expression; otherwise, <c>false</c>.</returns>
-        public bool IsMatch(string absolutePath)
+        public bool IsMatch(in string path, bool expandVariables = false)
         {
-            if (PatternIsIllegal || string.IsNullOrEmpty(absolutePath)) return false;
+            if (PatternIsIllegal || string.IsNullOrEmpty(path)) return false;
             else if (string.IsNullOrEmpty(_pattern)
                     || _pattern == "*"
-                    || _pattern == absolutePath) return true;
+                    || _pattern == path) return true;
 
             // Initializing the glob's state
             bool negate = _pattern[0] == '!';
-            if (State == null) Evaluators[DefaultEvaluator.Id] = new DefaultEvaluator();
+            if (State == null) Evaluators[0] = new DefaultEvaluator();
 
-            Value = absolutePath;
+            Value = path;
             V = (Value.Length - 1);
 
-            if (string.IsNullOrEmpty(Pattern)) Pattern = GetNormalizedPattern();
+            if (string.IsNullOrEmpty(Pattern)) Pattern = GetNormalizedPattern(expandVariables);
             P = (Pattern.Length - 1);
 
             // Evaluating if the pattern matches the value/path.
@@ -98,7 +99,7 @@ namespace Acklann.GlobN
 #if DEBUG
                 string placeholder(int index, char c = '●') => string.Concat(Enumerable.Repeat(c, index));
 
-                System.Diagnostics.Debug.WriteLine($"p    | {Pattern}");
+                System.Diagnostics.Debug.WriteLine($"p    | {Pattern.ToString()}");
                 System.Diagnostics.Debug.WriteLine($"p({Pattern[P]}) | {placeholder(P)}{Pattern.Substring(P)}");
                 System.Diagnostics.Debug.WriteLine("");
                 System.Diagnostics.Debug.WriteLine($"v    | {Value}");
@@ -108,7 +109,6 @@ namespace Acklann.GlobN
                 if (PatternIsIllegal) return false;
                 else switch (result)
                     {
-                        default:
                         case Outcome.Continue:
                             State.Step(this);
                             break;
@@ -141,8 +141,8 @@ namespace Acklann.GlobN
         {
             int tmp = V;
 
-            while (tmp > 0 && Value[tmp].IsDirectorySeparator() == false)
-                if (Value[--tmp].IsDirectorySeparator())
+            while (tmp > 0 && Value[tmp].IsaDirectorySeparator() == false)
+                if (Value[--tmp].IsaDirectorySeparator())
                 {
                     V = tmp;
                 }
@@ -243,14 +243,14 @@ namespace Acklann.GlobN
         private readonly string _pattern;
         private int _p, _v;
 
-        private string GetNormalizedPattern()
+        private string GetNormalizedPattern(bool expandVariables)
         {
             string pattern;
             if (_pattern[0] == '!')
             {
-                pattern = ExpandVariables ? System.Environment.ExpandEnvironmentVariables(_pattern.Substring(1, _pattern.Length - 1)) : _pattern.Substring(1, _pattern.Length - 1);
+                pattern = expandVariables ? System.Environment.ExpandEnvironmentVariables(_pattern.Substring(1, _pattern.Length - 1)) : _pattern.Substring(1, _pattern.Length - 1);
             }
-            else pattern = ExpandVariables ? System.Environment.ExpandEnvironmentVariables(_pattern) : _pattern;
+            else pattern = expandVariables ? System.Environment.ExpandEnvironmentVariables(_pattern) : _pattern;
 
             /* Trimming all sequence of the characters ('\\', '/', '.', '**') from the start of the pattern (i.e. a specialized TrimStart()). */
             char c = '\0', prev = '\0';
@@ -259,8 +259,8 @@ namespace Acklann.GlobN
             {
                 c = pattern[i];
 
-                if (c.IsDirectorySeparator()) separator = i;
-                if (wildcard == -1 && ((prev == '\0' || prev.IsDirectorySeparator()) && c == '*' && (i + 1 < n) && pattern[i + 1].IsDirectorySeparator())) wildcard = i;
+                if (c.IsaDirectorySeparator()) separator = i;
+                if (wildcard == -1 && ((prev == '\0' || prev.IsaDirectorySeparator()) && c == '*' && (i + 1 < n) && pattern[i + 1].IsaDirectorySeparator())) wildcard = i;
                 if ((c == '.' || c == '*' || c == '\\' || c == '/') == false) break;
 
                 prev = c;
@@ -269,12 +269,12 @@ namespace Acklann.GlobN
             pattern = (i >= 0) ? pattern.Substring(i, (n - i)) : pattern;
 
             /* --- */
-            if (pattern[pattern.Length - 1].IsDirectorySeparator())
+            if (pattern[pattern.Length - 1].IsaDirectorySeparator())
             {
                 pattern = $"{pattern}**\\*";
             }
 
-            if (pattern[0].IsDirectorySeparator() == false && (n > 2 && pattern[1] != ':')/* drive letter not specified */)
+            if (pattern[0].IsaDirectorySeparator() == false && (n > 2 && pattern[1] != ':')/* drive letter not specified */)
             {
                 pattern = '\\' + pattern;
             }

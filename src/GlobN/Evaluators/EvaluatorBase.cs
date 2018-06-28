@@ -22,31 +22,31 @@
                 switch (p)
                 {
                     default:
-                        context.E = DefaultEvaluator.Id; /* default: 0 */
+                        context.E = 0; /* default: 0 */
                         if (context.State == null) context.State = new DefaultEvaluator();
                         break;
 
                     case '*':
                         if (context.CharAt(-1) == '*')
                         {
-                            context.E = DirectoryWildcardEvaluator.Id;
+                            context.E = 1;
                             if (context.State == null) context.State = new DirectoryWildcardEvaluator();
                         }
                         else
                         {
-                            context.E = WildcardEvaluator.Id;
+                            context.E = 2;
                             if (context.State == null) context.State = new WildcardEvaluator();
                         }
                         break;
 
                     case '?':
-                        context.E = CharacterWildCardEvaluator.Id;
+                        context.E = 3;
                         if (context.State == null) context.State = new CharacterWildCardEvaluator();
                         break;
                 }
         }
 
-        internal virtual bool EquateCharacters(in Glob context, char p, char v)
+        internal virtual bool EquateCharacters(in Glob context, in char p, in char v)
         {
             if (p == '/' && v == '\\') return true;
             else if (p == '\\' && v == '/') return true;

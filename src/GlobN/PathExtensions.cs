@@ -83,7 +83,7 @@ namespace Acklann.GlobN
                 int i = 0, target = 0;
                 for (i = path.Length - 1; i >= 0; i--)
                 {
-                    if (path[i].IsDirectorySeparator() && ++target == segments) break;
+                    if (path[i].IsaDirectorySeparator() && ++target == segments) break;
                 }
 
                 i = i < 0 ? 0 : i;
@@ -109,7 +109,7 @@ namespace Acklann.GlobN
             {
                 character = char.ToLowerInvariant(directory[i]);
 
-                if (character.IsDirectorySeparator()) continue;
+                if (character.IsaDirectorySeparator()) continue;
                 else if (character != char.ToLowerInvariant(path[i])) return false;
             }
 

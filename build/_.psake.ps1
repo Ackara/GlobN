@@ -96,10 +96,10 @@ Task "Run-Tests" -alias "test" -description "This task invoke all tests within t
 Task "Run-Benchmarks" -alias "benchmark" -description "This task runs all project benchmarks." `
 -depends @("restore") -action {
 	$benchmarkProject = Get-ChildItem $RootDir -Recurse -Filter "*Benchmark.csproj" | Select-Object -First 1;
-
-	if (Test-Path $benchmarkProject)
+	
+	if (Test-Path $benchmarkProject.FullName)
 	{
-		Write-LineBreak "dotnet: rebuild";
+		Write-Header "dotnet: rebuild";
 		Exec { &dotnet clean $((Get-Item "$RootDir\*.sln").FullName); }
 		Exec { &dotnet build $((Get-Item "$RootDir\*.sln").FullName) --configuration Release; }
 
@@ -107,7 +107,7 @@ Task "Run-Benchmarks" -alias "benchmark" -description "This task runs all projec
 		{
 			$exe = Get-ChildItem "$($benchmarkProject.DirectoryName)\bin\Release" -Recurse -Filter "*Benchmark.dll" | Select-Object -First 1;
 			Push-Location $exe.DirectoryName;
-			Write-LineBreak "dotnet: run benchmarks";
+			Write-Header "dotnet: run benchmarks";
 			Exec { &dotnet $exe.FullName; }
 
 			# Copying benchmark results to report.
@@ -124,6 +124,7 @@ Task "Run-Benchmarks" -alias "benchmark" -description "This task runs all projec
 		}
 		finally { Pop-Location; }
 	}
+	else { Write-Host "no benchmarks projects found." -ForegroundColor Yellow; }
 }
 
 #endregion

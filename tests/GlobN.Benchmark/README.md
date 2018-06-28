@@ -5,19 +5,18 @@ This project benchmarks the speed of other Glob/Minimatch libraries on nuget.org
 
 ``` ini
 
-BenchmarkDotNet=v0.10.14, OS=Windows 10.0.16299.309 (1709/FallCreatorsUpdate/Redstone3)
-Intel Core i5-3317U CPU 1.70GHz (Ivy Bridge), 1 CPU, 4 logical and 2 physical cores
-Frequency=1656401 Hz, Resolution=603.7185 ns, Timer=TSC
-.NET Core SDK=2.1.103
-  [Host]     : .NET Core 2.0.6 (CoreCLR 4.6.26212.01, CoreFX 4.6.26212.01), 64bit RyuJIT
-  DefaultJob : .NET Core 2.0.6 (CoreCLR 4.6.26212.01, CoreFX 4.6.26212.01), 64bit RyuJIT
+BenchmarkDotNet=v0.10.14, OS=Windows 10.0.17134
+Intel Core i7-6700K CPU 4.00GHz (Skylake), 1 CPU, 8 logical and 4 physical cores
+.NET Core SDK=2.1.201
+  [Host]     : .NET Core 2.0.7 (CoreCLR 4.6.26328.01, CoreFX 4.6.26403.03), 64bit RyuJIT
+  DefaultJob : .NET Core 2.0.7 (CoreCLR 4.6.26328.01, CoreFX 4.6.26403.03), 64bit RyuJIT
 
 
 ```
-|      Method |      Mean |     Error |    StdDev | Scaled | Rank |      Gen 0 |   Allocated |
-|------------ |----------:|----------:|----------:|-------:|-----:|-----------:|------------:|
-| DotNet.Glob |  1.230 ms | 0.0054 ms | 0.0045 ms |   0.05 |    1 |     3.9063 |     8.92 KB |
-|       GlobN |  2.864 ms | 0.0108 ms | 0.0096 ms |   0.12 |    2 |  1320.3125 |  2031.06 KB |
-|        Glob |  8.403 ms | 0.0251 ms | 0.0222 ms |   0.35 |    3 | 10484.3750 | 16108.56 KB |
-|       Regex | 24.306 ms | 0.0646 ms | 0.0605 ms |   1.00 |    4 |          - |    21.55 KB |
+|      Method |        Mean |      Error |    StdDev | Scaled | Rank |     Gen 0 |   Allocated |
+|------------ |------------:|-----------:|----------:|-------:|-----:|----------:|------------:|
+|       GlobN |    578.4 us |  0.3824 us | 0.3193 us |   0.05 |    1 |         - |     1.13 KB |
+| DotNet.Glob |    604.5 us |  0.5462 us | 0.5109 us |   0.05 |    2 |    1.9531 |     8.92 KB |
+|        Glob |  4,096.2 us |  9.0823 us | 8.0513 us |   0.36 |    3 | 3929.6875 | 16108.56 KB |
+|       Regex | 11,349.3 us | 11.2148 us | 9.9416 us |   1.00 |    4 |         - |    21.55 KB |
 

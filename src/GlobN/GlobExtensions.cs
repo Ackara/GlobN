@@ -40,11 +40,10 @@ namespace Acklann.GlobN
             if (expandVariables) directory = Environment.ExpandEnvironmentVariables(directory);
             if (!Directory.Exists(directory)) throw new DirectoryNotFoundException($"Could not find folder at '{directory}'.");
 
-            pattern.ExpandVariables = expandVariables;
             directory = PathExtensions.MoveUpDirectory(directory, GetUpOperators(pattern, out string trimmedPattern));
 
             foreach (string path in Directory.EnumerateFiles(Path.Combine(directory, GetDeepestFolder(trimmedPattern)), "*", SearchOption.AllDirectories))
-                if (pattern.IsMatch(path))
+                if (pattern.IsMatch(path, expandVariables))
                 {
                     yield return path;
                 }
@@ -150,12 +149,12 @@ namespace Acklann.GlobN
             return false;
         }
 
-        internal static bool IsWildcard(this char character)
+        internal static bool IsaWildcard(this char character)
         {
             return character == '*' || character == '?';
         }
 
-        internal static bool IsDirectorySeparator(this char character)
+        internal static bool IsaDirectorySeparator(this char character)
         {
             return character == '\\' || character == '/';
         }
@@ -165,7 +164,7 @@ namespace Acklann.GlobN
             int i, sep = 0;
             for (i = 0; i < pattern.Length; i++)
             {
-                if (IsDirectorySeparator(pattern[i])) sep = i;
+                if (IsaDirectorySeparator(pattern[i])) sep = i;
                 else if (isaClass(pattern[i])) break;
             }
 
