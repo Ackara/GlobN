@@ -32,7 +32,7 @@ namespace Acklann.GlobN
         /// <returns>The files that match the glob pattern from the directory.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="pattern"/> is null.</exception>
         /// <exception cref="DirectoryNotFoundException"><paramref name="directory" /> do not exist.</exception>
-        public static IEnumerable<string> ResolvePath(this Glob pattern, string directory = null, bool expandVariables = false)
+        public static IEnumerable<string> ResolvePath(this Glob pattern, string directory = null, SearchOption searchOption = SearchOption.TopDirectoryOnly, bool expandVariables = false)
         {
             if (pattern == null) throw new ArgumentNullException(nameof(pattern));
 
@@ -42,7 +42,7 @@ namespace Acklann.GlobN
 
             directory = PathExtensions.MoveUpDirectory(directory, GetUpOperators(pattern, out string trimmedPattern));
 
-            foreach (string path in Directory.EnumerateFiles(Path.Combine(directory, GetDeepestFolder(trimmedPattern)), "*", SearchOption.AllDirectories))
+            foreach (string path in Directory.EnumerateFiles(Path.Combine(directory, GetDeepestFolder(trimmedPattern)), "*", searchOption))
                 if (pattern.IsMatch(path, expandVariables))
                 {
                     yield return path;
@@ -70,20 +70,6 @@ namespace Acklann.GlobN
         }
 
         /// <summary>
-        /// Returns the files from the specified directory that matches the <paramref name="pattern" />.
-        /// </summary>
-        /// <param name="directory">The current directory (default: <see cref="Environment.CurrentDirectory" />).</param>
-        /// <param name="pattern">The glob pattern.</param>
-        /// <param name="expandVariables">if set to <c>true</c> expands the environment variables within the <paramref name="pattern" /> and <paramref name="directory" />.</param>
-        /// <returns>The files that match the glob pattern from the directory.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="pattern" /> is null.</exception>
-        /// <exception cref="DirectoryNotFoundException"><paramref name="directory" /> do not exist.</exception>
-        public static IEnumerable<string> GetFiles(this string directory, Glob pattern, bool expandVariables = false)
-        {
-            return ResolvePath(pattern, directory, expandVariables);
-        }
-
-        /// <summary>
         /// Returns the files from the specified directory that matches the <paramref name="pattern"/>.
         /// </summary>
         /// <param name="pattern">The glob pattern.</param>
@@ -92,9 +78,23 @@ namespace Acklann.GlobN
         /// <returns>The files that match the glob pattern from the directory.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="pattern"/> is null.</exception>
         /// <exception cref="DirectoryNotFoundException"><paramref name="directory" /> do not exist.</exception>
-        public static IEnumerable<string> ResolvePath(this string pattern, string directory = null, bool expandVariables = false)
+        public static IEnumerable<string> ResolvePath(this string pattern, string directory = null, SearchOption searchOption = SearchOption.TopDirectoryOnly, bool expandVariables = false)
         {
-            return ResolvePath(new Glob(pattern), directory, expandVariables);
+            return ResolvePath(new Glob(pattern), directory, searchOption, expandVariables);
+        }
+
+        /// <summary>
+        /// Returns the files from the specified directory that matches the <paramref name="pattern" />.
+        /// </summary>
+        /// <param name="directory">The current directory (default: <see cref="Environment.CurrentDirectory" />).</param>
+        /// <param name="pattern">The glob pattern.</param>
+        /// <param name="expandVariables">if set to <c>true</c> expands the environment variables within the <paramref name="pattern" /> and <paramref name="directory" />.</param>
+        /// <returns>The files that match the glob pattern from the directory.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="pattern" /> is null.</exception>
+        /// <exception cref="DirectoryNotFoundException"><paramref name="directory" /> do not exist.</exception>
+        public static IEnumerable<string> GetFiles(this string directory, Glob pattern, SearchOption searchOption = SearchOption.TopDirectoryOnly, bool expandVariables = false)
+        {
+            return ResolvePath(pattern, directory, searchOption, expandVariables);
         }
 
         /* DirectoryInfo */
@@ -108,9 +108,9 @@ namespace Acklann.GlobN
         /// <returns>The files that match the glob pattern from the directory.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="pattern"/> is null.</exception>
         /// <exception cref="DirectoryNotFoundException"><paramref name="directory" /> do not exist.</exception>
-        public static IEnumerable<FileInfo> GetFiles(this DirectoryInfo directory, Glob pattern, bool expandVariables = false)
+        public static IEnumerable<FileInfo> GetFiles(this DirectoryInfo directory, Glob pattern, SearchOption searchOption = SearchOption.TopDirectoryOnly, bool expandVariables = false)
         {
-            foreach (var filePath in ResolvePath(pattern, directory.FullName, expandVariables))
+            foreach (var filePath in ResolvePath(pattern, directory.FullName, searchOption, expandVariables))
             {
                 yield return new FileInfo(filePath);
             };

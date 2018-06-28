@@ -132,8 +132,8 @@ namespace Acklann.GlobN.Benchmark
 
         private static void RunTest()
         {
-            var instance = new GlobBenchmark();
-            foreach (var method in (from m in typeof(GlobBenchmark).GetMethods()
+            var instance = new GlobComparisons();
+            foreach (var method in (from m in typeof(GlobComparisons).GetMethods()
                                     where m.GetCustomAttribute<BenchmarkAttribute>() != null
                                     orderby m.Name.Length
                                     select m))

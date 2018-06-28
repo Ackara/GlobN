@@ -1,8 +1,12 @@
-version 2.0.1
+version 2.1.0
 -------------
 Changes: 
 	* Remove 'throwIfInvalid' from Glob constructor.
 	* Glob Extension methods 'expandVariable' no longer defaults to true.
+	* The 'SearchOption' enum has been added to the ResolvePath overloads.
+
+Enhancements:
+	* IsMatch performance has been significantly improved.
 
 version 1.0.7
 -------------

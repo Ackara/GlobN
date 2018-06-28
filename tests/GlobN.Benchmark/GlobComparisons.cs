@@ -12,9 +12,9 @@ namespace Acklann.GlobN.Benchmark
     [MemoryDiagnoser]
     [OrderProvider(SummaryOrderPolicy.FastestToSlowest)]
     [RankColumn(BenchmarkDotNet.Mathematics.NumeralSystem.Arabic)]
-    public class GlobBenchmark
+    public class GlobComparisons
     {
-        public GlobBenchmark()
+        public GlobComparisons()
         {
             var list = new Stack<string>();
             using (var reader = new StreamReader(File.OpenRead("fileList.txt")))
