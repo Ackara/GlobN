@@ -2,8 +2,6 @@
 {
     internal abstract class EvaluatorBase : IEvaluator
     {
-        public const char NULL_CHAR = '\0';
-
         public abstract void Initialize(in Glob context, in char p);
 
         public abstract Outcome Evaluate(in Glob context, in char p, in char v);
