@@ -5,7 +5,7 @@
 ---
 
 ## What is GlobN
-**GlobN** is a file pattern matching library for .NET. Grabbing files from the command-line can never be easier.
+**GlobN** is a file pattern matching library for that outperforms Regex ([see benchmarks](tests/GlobN.Benchmark/README.md)). Grabbing files from the command-line can never be easier.
 
 ### How it works
 Let say your current directory is as follows.

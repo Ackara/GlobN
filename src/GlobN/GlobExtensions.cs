@@ -32,7 +32,7 @@ namespace Acklann.GlobN
         /// <returns>The files that match the glob pattern from the directory.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="pattern"/> is null.</exception>
         /// <exception cref="DirectoryNotFoundException"><paramref name="directory" /> do not exist.</exception>
-        public static IEnumerable<string> ResolvePath(this Glob pattern, string directory = null, SearchOption searchOption = SearchOption.TopDirectoryOnly, bool expandVariables = false)
+        public static IEnumerable<string> ResolvePath(this Glob pattern, string directory = null, SearchOption searchOption = SearchOption.AllDirectories, bool expandVariables = false)
         {
             if (pattern == null) throw new ArgumentNullException(nameof(pattern));
 
@@ -42,7 +42,7 @@ namespace Acklann.GlobN
 
             directory = PathExtensions.MoveUpDirectory(directory, GetUpOperators(pattern, out string trimmedPattern));
 
-            foreach (string path in Directory.EnumerateFiles(Path.Combine(directory, GetDeepestFolder(trimmedPattern)), "*", searchOption))
+            foreach (string path in Directory.EnumerateFiles(directory, "*", searchOption))
                 if (pattern.IsMatch(path, expandVariables))
                 {
                     yield return path;
@@ -78,7 +78,7 @@ namespace Acklann.GlobN
         /// <returns>The files that match the glob pattern from the directory.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="pattern"/> is null.</exception>
         /// <exception cref="DirectoryNotFoundException"><paramref name="directory" /> do not exist.</exception>
-        public static IEnumerable<string> ResolvePath(this string pattern, string directory = null, SearchOption searchOption = SearchOption.TopDirectoryOnly, bool expandVariables = false)
+        public static IEnumerable<string> ResolvePath(this string pattern, string directory = null, SearchOption searchOption = SearchOption.AllDirectories, bool expandVariables = false)
         {
             return ResolvePath(new Glob(pattern), directory, searchOption, expandVariables);
         }
@@ -92,7 +92,7 @@ namespace Acklann.GlobN
         /// <returns>The files that match the glob pattern from the directory.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="pattern" /> is null.</exception>
         /// <exception cref="DirectoryNotFoundException"><paramref name="directory" /> do not exist.</exception>
-        public static IEnumerable<string> GetFiles(this string directory, Glob pattern, SearchOption searchOption = SearchOption.TopDirectoryOnly, bool expandVariables = false)
+        public static IEnumerable<string> GetFiles(this string directory, Glob pattern, SearchOption searchOption = SearchOption.AllDirectories, bool expandVariables = false)
         {
             return ResolvePath(pattern, directory, searchOption, expandVariables);
         }
@@ -108,7 +108,7 @@ namespace Acklann.GlobN
         /// <returns>The files that match the glob pattern from the directory.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="pattern"/> is null.</exception>
         /// <exception cref="DirectoryNotFoundException"><paramref name="directory" /> do not exist.</exception>
-        public static IEnumerable<FileInfo> GetFiles(this DirectoryInfo directory, Glob pattern, SearchOption searchOption = SearchOption.TopDirectoryOnly, bool expandVariables = false)
+        public static IEnumerable<FileInfo> GetFiles(this DirectoryInfo directory, Glob pattern, SearchOption searchOption = SearchOption.AllDirectories, bool expandVariables = false)
         {
             foreach (var filePath in ResolvePath(pattern, directory.FullName, searchOption, expandVariables))
             {
@@ -135,20 +135,6 @@ namespace Acklann.GlobN
 
         /* ===== */
 
-        internal static bool IsaPattern(this string value)
-        {
-            for (int i = 0; i < value.Length; i++)
-                switch (value[i])
-                {
-                    case '*':
-                    case '?':
-                    case '!':
-                        return true;
-                }
-
-            return false;
-        }
-
         internal static bool IsaWildcard(this char character)
         {
             return character == '*' || character == '?';
@@ -157,32 +143,6 @@ namespace Acklann.GlobN
         internal static bool IsaDirectorySeparator(this char character)
         {
             return character == '\\' || character == '/';
-        }
-
-        internal static string GetDeepestFolder(this string pattern)
-        {
-            int i, sep = 0;
-            for (i = 0; i < pattern.Length; i++)
-            {
-                if (IsaDirectorySeparator(pattern[i])) sep = i;
-                else if (isaClass(pattern[i])) break;
-            }
-
-            return pattern.Substring(0, sep);
-
-            bool isaClass(char c)
-            {
-                switch (c)
-                {
-                    case '*':
-                    case '?':
-                    case '!':
-                        return true;
-
-                    default:
-                        return false;
-                }
-            }
         }
 
         internal static int GetUpOperators(this string relativePath, out string trimmedPath)
