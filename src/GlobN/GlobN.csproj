@@ -5,8 +5,8 @@
     <RootNamespace>Acklann.GlobN</RootNamespace>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <Title>GlobN</Title>
-    <AssemblyVersion>2.1.2</AssemblyVersion>
-    <PackageVersion>2.1.2</PackageVersion>
+    <AssemblyVersion>2.1.3</AssemblyVersion>
+    <PackageVersion>2.1.3</PackageVersion>
     <Description>A netstandard library that allows you to effortlessy grab files via glob/minimatch patterns. Great for resolving relative paths coming from the command-line</Description>
     <Authors>Ackara</Authors>
     <Company>Ackara</Company>
@@ -15,7 +15,22 @@
     <PackageIconUrl>https://github.com/Ackara/GlobN/raw/master/art/icon.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/Ackara/GlobN</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/Ackara/GlobN/blob/master/license.txt</PackageLicenseUrl>
-    <PackageReleaseNotes>version 1.0.7
+    <PackageReleaseNotes>version 2.1.2
+-------------
+Fixes:
+	* ResolvePath not returning absolute paths.
+
+version 2.1.0
+-------------
+Changes: 
+	* Remove 'throwIfInvalid' from Glob constructor.
+	* Glob Extension methods 'expandVariable' no longer defaults to true.
+	* The 'SearchOption' enum has been added to the ResolvePath overloads.
+
+Enhancements:
+	* IsMatch performance has been significantly improved.
+
+version 1.0.7
 -------------
 Enhancements:
   * Make matches case-insensitive.

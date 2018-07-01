@@ -2,7 +2,7 @@
     "version":  {
                     "Major":  2,
                     "Minor":  1,
-                    "Patch":  2,
+                    "Patch":  3,
                     "Suffix":  "rc"
                 },
     "owner":  "Ackara",
@@ -13,7 +13,7 @@
     "repositoryUrl":  "https://github.com/Ackara/GlobN.git",
     "iconUri":  "https://github.com/Ackara/GlobN/raw/master/art/icon.png",
     "licenseUri":  "https://github.com/Ackara/GlobN/blob/master/license.txt",
-    "releaseNotes":  "version 1.0.7\r\n-------------\r\nEnhancements:\r\n  * Make matches case-insensitive.\r\n\r\nversion 1.0.0\r\n-------------\r\nFeatures:\r\n  * Suuports the following wildcards (\u0027*\u0027, \u0027**\u0027, \u0027?\u0027).\r\n  * Supports the path expansion for both environment variables and parent directories (\u0027..\\\u0027).\r\n  * Supports pattern negating matches (\u0027!\u0027).\r\n  * Supports filtering list of paths.\r\n",
+    "releaseNotes":  "version 2.1.2\r\n-------------\r\nFixes:\r\n\t* ResolvePath not returning absolute paths.\r\n\r\nversion 2.1.0\r\n-------------\r\nChanges: \r\n\t* Remove \u0027throwIfInvalid\u0027 from Glob constructor.\r\n\t* Glob Extension methods \u0027expandVariable\u0027 no longer defaults to true.\r\n\t* The \u0027SearchOption\u0027 enum has been added to the ResolvePath overloads.\r\n\r\nEnhancements:\r\n\t* IsMatch performance has been significantly improved.\r\n\r\nversion 1.0.7\r\n-------------\r\nEnhancements:\r\n  * Make matches case-insensitive.\r\n\r\nversion 1.0.0\r\n-------------\r\nFeatures:\r\n  * Suuports the following wildcards (\u0027*\u0027, \u0027**\u0027, \u0027?\u0027).\r\n  * Supports the path expansion for both environment variables and parent directories (\u0027..\\\u0027).\r\n  * Supports pattern negating matches (\u0027!\u0027).\r\n  * Supports filtering list of paths.\r\n",
     "copyright":  "Licensed under the MIT license.",
     "tags":  "glob minimatch file pattern matching",
     "branchSuffixMap":  {
