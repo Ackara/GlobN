@@ -63,7 +63,8 @@ namespace Acklann.GlobN.Tests
 
             case3.ShouldContain(sampleFile.FullName);
 
-            case4.ShouldBeEmpty();
+            case4.Length.ShouldBe(1);
+            case4[0].ShouldBe(sampleFile.FullName);
             case5.ShouldNotBeEmpty();
             case6.Length.ShouldBe(1);
             case7.Length.ShouldBe(1);

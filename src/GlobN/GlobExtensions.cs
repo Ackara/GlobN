@@ -36,6 +36,15 @@ namespace Acklann.GlobN
         {
             if (pattern == null) throw new ArgumentNullException(nameof(pattern));
 
+            // Checking to see if the pattern denotes a existing path. If so, return it.
+            string absolutePath = (expandVariables ? Environment.ExpandEnvironmentVariables(pattern) : pattern.ToString());
+            if (File.Exists(absolutePath))
+            {
+                yield return absolutePath;
+                yield break;
+            }
+
+            // Lookup all files in the directory that match the pattern.
             if (string.IsNullOrEmpty(directory)) directory = Environment.CurrentDirectory;
             if (expandVariables) directory = Environment.ExpandEnvironmentVariables(directory);
             if (!Directory.Exists(directory)) throw new DirectoryNotFoundException($"Could not find folder at '{directory}'.");
