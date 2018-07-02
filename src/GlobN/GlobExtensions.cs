@@ -28,6 +28,7 @@ namespace Acklann.GlobN
         /// </summary>
         /// <param name="pattern">The glob pattern.</param>
         /// <param name="directory">The current directory (default: <see cref="Environment.CurrentDirectory"/>).</param>
+        /// <param name="searchOption">One of the enumeration values that specifies whether the search operation should include only the current directory or should include all subdirectories. (default <see cref="SearchOption.AllDirectories"/>)</param>
         /// <param name="expandVariables">if set to <c>true</c> expands the environment variables within the <paramref name="pattern"/> and <paramref name="directory"/>.</param>
         /// <returns>The files that match the glob pattern from the directory.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="pattern"/> is null.</exception>
@@ -37,7 +38,7 @@ namespace Acklann.GlobN
             if (pattern == null) throw new ArgumentNullException(nameof(pattern));
 
             // Checking to see if the pattern denotes a existing path. If so, return it.
-            string absolutePath = (expandVariables ? Environment.ExpandEnvironmentVariables(pattern) : pattern.ToString());
+            string absolutePath = (expandVariables ? Environment.ExpandEnvironmentVariables(pattern.ToString()) : pattern.ToString());
             if (File.Exists(absolutePath))
             {
                 yield return absolutePath;
@@ -83,6 +84,7 @@ namespace Acklann.GlobN
         /// </summary>
         /// <param name="pattern">The glob pattern.</param>
         /// <param name="directory">The current directory (default: <see cref="Environment.CurrentDirectory"/>).</param>
+        /// <param name="searchOption">One of the enumeration values that specifies whether the search operation should include only the current directory or should include all subdirectories. (default <see cref="SearchOption.AllDirectories"/>)</param>
         /// <param name="expandVariables">if set to <c>true</c> expands the environment variables within the <paramref name="pattern"/> and <paramref name="directory"/>.</param>
         /// <returns>The files that match the glob pattern from the directory.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="pattern"/> is null.</exception>
@@ -97,6 +99,7 @@ namespace Acklann.GlobN
         /// </summary>
         /// <param name="directory">The current directory (default: <see cref="Environment.CurrentDirectory" />).</param>
         /// <param name="pattern">The glob pattern.</param>
+        /// <param name="searchOption">One of the enumeration values that specifies whether the search operation should include only the current directory or should include all subdirectories. (default <see cref="SearchOption.AllDirectories"/>)</param>
         /// <param name="expandVariables">if set to <c>true</c> expands the environment variables within the <paramref name="pattern" /> and <paramref name="directory" />.</param>
         /// <returns>The files that match the glob pattern from the directory.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="pattern" /> is null.</exception>
@@ -113,6 +116,7 @@ namespace Acklann.GlobN
         /// </summary>
         /// <param name="directory">The current directory.</param>
         /// <param name="pattern">The glob pattern.</param>
+        /// <param name="searchOption">One of the enumeration values that specifies whether the search operation should include only the current directory or should include all subdirectories. (default <see cref="SearchOption.AllDirectories"/>)</param>
         /// <param name="expandVariables">if set to <c>true</c> expands the environment variables within the <paramref name="pattern"/> and <paramref name="directory"/>.</param>
         /// <returns>The files that match the glob pattern from the directory.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="pattern"/> is null.</exception>

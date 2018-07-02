@@ -51,10 +51,11 @@ Task "Import-Dependencies" -alias "restore" -description "This task imports all 
 Task "Increment-VersionNumber" -alias "version" -description "This task increments the project's version numbers" `
 -depends @("restore") -action {
     $manifest = Get-NcrementManifest $ManifestJson;
+	$manifest.ReleaseNotes = Get-Content "$RootDir\releaseNotes.txt" | Out-String;
     $oldVersion = $manifest | Convert-NcrementVersionNumberToString;
 	$result = $manifest | Step-NcrementVersionNumber $Branch -Break:$Major -Feature:$Minor -Patch | Update-NcrementProjectFile "$RootDir\src" -Commit;
     $newVersion = $manifest | Convert-NcrementVersionNumberToString;
-
+	
 	Write-Host "  * Incremented version number from '$oldVersion' to '$newVersion'.";
 	foreach ($file in $result.ModifiedFiles)
 	{
