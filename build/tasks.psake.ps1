@@ -1,5 +1,8 @@
 #
 
+Task "Publish" -alias "push" -description "Publish all publish packages." `
+-depends @("restore", "compile", "test", "pack", "push-nuget");
+
 Task "Package-Solution" -alias "pack" -description "This task generates all delployment packages." `
 -depends @("restore") -action {
     $version = Get-NcrementManifest $ManifestJson | Convert-NcrementVersionNumberToString $Branch -AppendSuffix;
