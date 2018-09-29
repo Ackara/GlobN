@@ -262,8 +262,9 @@ paket-files/
 __pycache__/
 *.pyc
 
-# Approval Tests
+# Generated Files
 *.received.*
+tools/
 
 # Sensitive Files
 [Ss]ecrets.*

@@ -26,8 +26,18 @@ namespace Acklann.GlobN.Benchmark
         {
             //RunTest();
 
-            var app = new BenchmarkSwitcher(GetBenchmarks());
-            IEnumerable<Summary> results = app.Run(args);
+            Type[] tests = GetBenchmarks();
+            IEnumerable<Summary> results = null;
+
+            if (tests.Length == 1)
+            {
+                results = new Summary[] { BenchmarkRunner.Run(tests[0]) };
+            }
+            else
+            {
+                var app = new BenchmarkSwitcher(tests);
+                results = app.Run(args);
+            }
             BuildTimeline(results, @"..\..\..\..\timeline.csv");
         }
 
