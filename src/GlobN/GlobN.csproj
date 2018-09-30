@@ -1,48 +1,52 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Acklann.GlobN</AssemblyName>
     <RootNamespace>Acklann.GlobN</RootNamespace>
-    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <AssemblyName>Acklann.GlobN</AssemblyName>
+    <AssemblyVersion>2.1.9</AssemblyVersion>
+    <PackageVersion>2.1.9</PackageVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <Title>GlobN</Title>
-    <AssemblyVersion>2.1.7</AssemblyVersion>
-    <PackageVersion>2.1.7</PackageVersion>
-    <Description>A netstandard library that allows you to effortlessy grab files via glob/minimatch patterns. Great for resolving relative paths coming from the command-line</Description>
     <Authors>Ackara</Authors>
     <Company>Ackara</Company>
+    <Copyright>MIT license.</Copyright>
     <PackageTags>glob minimatch file pattern matching</PackageTags>
-    <Copyright>Licensed under the MIT license.</Copyright>
-    <PackageIconUrl>https://github.com/Ackara/GlobN/raw/master/art/icon.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/Ackara/GlobN</PackageProjectUrl>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageIconUrl>https://github.com/Ackara/GlobN/raw/master/art/icon.png</PackageIconUrl>
     <PackageLicenseUrl>https://github.com/Ackara/GlobN/blob/master/license.txt</PackageLicenseUrl>
-    <PackageReleaseNotes>version 2.1.2
--------------
-Fixes:
-	* ResolvePath not returning absolute paths.
+    <Description>A netstandard library that out-performs Regex and allows you to effortlessly grab files via glob/minimatch patterns. Great for resolving relative paths coming from the command-line.</Description>
+    <PackageReleaseNotes>
+      version 2.1.2
+      -------------
+      Fixes:
+      * ResolvePath not returning absolute paths.
 
-version 2.1.0
--------------
-Changes: 
-	* Remove 'throwIfInvalid' from Glob constructor.
-	* Glob Extension methods 'expandVariable' no longer defaults to true.
-	* The 'SearchOption' enum has been added to the ResolvePath overloads.
+      version 2.1.0
+      -------------
+      Changes:
+      * Remove 'throwIfInvalid' from Glob constructor.
+      * Glob Extension methods 'expandVariable' no longer defaults to true.
+      * The 'SearchOption' enum has been added to the ResolvePath overloads.
 
-Enhancements:
-	* IsMatch performance has been significantly improved.
+      Enhancements:
+      * IsMatch performance has been significantly improved.
 
-version 1.0.7
--------------
-Enhancements:
-  * Make matches case-insensitive.
+      version 1.0.7
+      -------------
+      Enhancements:
+      * Make matches case-insensitive.
 
-version 1.0.0
--------------
-Features:
-  * Suuports the following wildcards ('*', '**', '?').
-  * Supports the path expansion for both environment variables and parent directories ('..\').
-  * Supports pattern negating matches ('!').
-  * Supports filtering list of paths.
-</PackageReleaseNotes>
+      version 1.0.0
+      -------------
+      Features:
+      * Suuports the following wildcards ('*', '**', '?').
+      * Supports the path expansion for both environment variables and parent directories ('..\').
+      * Supports pattern negating matches ('!').
+      * Supports filtering list of paths.
+    </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/Ackara/GlobN.git</RepositoryUrl>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
