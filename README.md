@@ -1,53 +1,27 @@
 # GlobN
 [![NuGet](https://img.shields.io/nuget/v/Acklann.GlobN.svg)](https://www.nuget.org/packages/Acklann.GlobN/)
-[![NuGet](https://img.shields.io/nuget/dt/Acklann.GlobN.svg)](https://www.nuget.org/packages/Acklann.GlobN/)
-![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)
----
 
-## What is GlobN
-**GlobN** is a file pattern matching library for that outperforms Regex ([see benchmarks](tests/GlobN.Benchmark/README.md)). Grabbing files from the command-line can never be easier.
+**GlobN** is a fast file pattern matching library for that outperforms Regex ([see benchmarks](tests/GlobN.Benchmark/BenchmarkDotNet.Artifacts/results/vbench.html)).
 
-### How it works
-Let say your current directory is as follows.
+## Usage
 
-```txt
-C:\projects\coolapp
-
-index.html
-js/
--- site.ts
--- site.js
--- viewModel/
-   -- view.ts
-   -- view.js
-```
-
-Most of the functions you'll be utilizing are extension methods. So lets say you want to grab all the files within the current directory.
+**GlobN** is available at [nuget](https://www.nuget.org/packages/Acklann.GlobN). `PM> Install-Package Acklann.GlobN`
 
 ```csharp
-string cd = System.Environment.CurrentDirectory;
-IEnumerable<string> all5Files = cd.GetFiles();
-```
+bool success = Glob.IsMatch("index.html", "index.*");
+/* returns: true */
 
-Lets say your in the **css folder** and you want to grab all of the `.js` files.
+Glob pattern = "**/*.js";
+IEnumerable<string> allJsFilePaths = pattern.ResolvePath(@"C:\app\scripts\");
+/* returns: The paths of all .js files within the current directory and its sub-directories. */
 
-```csharp
-var siteJs = cd.GetFiles("../js/*.js");
-/* return: js\site.js */
+Glob pattern = "../../index.html";
+string fullPath = pattern.ExpandPath();
+/* returns: The full path of the specified file. */
 
-var allJsFiles cd.GetFiles(@"..\**\*.js");
-/* return: js\site.js; js\viewModel\view.js */
-```
-
-Finally, here are some other straight forward examples.
-
-```csharp
-var filteredList = listOfPaths.Filter("*.js");
-
-IEnumerable<string> files = @"..\js\*.ts".ResolvePath();
-
-Glob glob = "*.png";
-glob.IsMatch("/site/content/bg.png");
+Glob pattern = "scripts/**/auth/*.ts";
+IEnumerable<string> filteredList = pattern.Filter(new string[] { ... }).
+/* returns: Only the strings that match the pattern */
 ```
 
 **Supported Expressions**
@@ -60,7 +34,4 @@ glob.IsMatch("/site/content/bg.png");
 | ?       | Match a single character.
 | !       | Negates the matching pattern. **Only applicable at the beginning of the pattern**.
 
-**NOTE: matches a case-insensitive.**
-
-### Where can I get it
-**GlobN** is available at [nuget.org](https://www.nuget.org/packages/Acklann.GlobN). `PM> Install-Package Acklann.GlobN`
+**NOTE: matches are case-insensitive.**
