@@ -1,6 +1,4 @@
 ﻿using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Attributes.Columns;
-using BenchmarkDotNet.Order;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -10,7 +8,6 @@ using G = Glob;
 namespace Acklann.GlobN.Benchmark
 {
     [MemoryDiagnoser]
-    [OrderProvider(SummaryOrderPolicy.FastestToSlowest)]
     [RankColumn(BenchmarkDotNet.Mathematics.NumeralSystem.Arabic)]
     public class GlobComparisons
     {
@@ -99,7 +96,7 @@ namespace Acklann.GlobN.Benchmark
 
         private static (string Glob, string Regex)[] Patterns()
         {
-            return new(string, string)[]
+            return new (string, string)[]
             {
                 ("**/*", ".+"),
                 ("**/*.png", @".+\.png"),

@@ -18,10 +18,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="benchmarkdotnet" Version="0.10.14" />
+    <PackageReference Include="Acklann.VBench" Version="1.0.8-rc" />
+    <PackageReference Include="benchmarkdotnet" Version="0.11.4" />
     <PackageReference Include="dotnet.glob" Version="2.1.1" />
     <PackageReference Include="glob" Version="0.4.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
   </ItemGroup>
 
   <ItemGroup>
