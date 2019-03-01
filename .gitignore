@@ -263,6 +263,8 @@ __pycache__/
 *.pyc
 
 # Generated Files
+**/BenchmarkDotNet.Artifacts/results/*.*
+!**/BenchmarkDotNet.Artifacts/results/*vbench.*
 *.received.*
 tools/
 

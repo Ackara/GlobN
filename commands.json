@@ -25,11 +25,11 @@
       "workingDirectory": ".",
       "arguments": "-ExecutionPolicy Bypass -NoProfile -NonInteractive -File build.ps1 push"
     },
-    "benchmark":
+	"configure":
     {
       "fileName": "powershell.exe",
       "workingDirectory": ".",
-      "arguments": "-ExecutionPolicy Bypass -NoProfile -NonInteractive -File build.ps1 benchmark"
+      "arguments": "-ExecutionPolicy Bypass -NoProfile -NonInteractive -File build.ps1 configure"
     }
   }
 }
