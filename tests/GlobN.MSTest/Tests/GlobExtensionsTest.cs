@@ -11,20 +11,20 @@ namespace Acklann.GlobN.Tests
     public class GlobExtensionsTest
     {
         [TestMethod]
-        public void ExpandPath_should_convert_a_pattern_to_absolute_path()
+        public void Should_expand_a_pattern_to_its_absolute_path()
         {
             // Arrange
-            string empty = null;
-            string sampleFile = Path.GetTempFileName();
-            string root = Path.Combine("C:\\", "websites", "coolapp.com", "src", "wwwroot");
+            Glob empty = null;
+            Glob sampleFile = Path.GetTempFileName();
+            Glob root = Path.Combine("C:\\", "websites", "coolapp.com", "src", "wwwroot");
 
             // Act
-            var case1 = @"..\Views".ExpandPath(root);
-            var case2 = new Glob("../../index.html").ExpandPath(root);
-            var case3 = "..\\file.tmp".ExpandPath(@"%TEMP%\foo", true);
-            var case4 = "../".ExpandPath(@"%TEMP%\foo", expandVariables: false);
-            var case5 = empty.ExpandPath(root);
-            var case6 = sampleFile.ExpandPath(root);
+            var case1 = ((Glob)@"..\Views").Expand(root);
+            var case2 = new Glob("../../index.html").Expand(root);
+            var case3 = ((Glob)"..\\file.tmp").Expand(@"%TEMP%\foo", true);
+            var case4 = ((Glob)"../").Expand(@"%TEMP%\foo", expandVariables: false);
+            var case5 = empty.Expand(root);
+            var case6 = sampleFile.Expand(root);
 
             // Assert
             case1.ShouldEndWith(@"src\Views");
@@ -36,7 +36,7 @@ namespace Acklann.GlobN.Tests
         }
 
         [TestMethod]
-        public void ResolvePath_should_return_a_file_list_that_match_the_pattern()
+        public void Should_resolve_paths_that_match_pattern_within_a_folder()
         {
             // Arrange
             Glob err = null;
@@ -44,13 +44,13 @@ namespace Acklann.GlobN.Tests
             var directory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
             // Act
-            var case1 = "*.dll".ResolvePath(directory).ToArray();
-            var case2 = "../../../Tests/*.cs".ResolvePath(directory).ToArray();
-            var case3 = new Glob(sampleFile.Name).ResolvePath("%TEMP%", expandVariables: true).ToArray();
-            var case4 = sampleFile.FullName.ResolvePath(directory).ToArray();
-            var case5 = $"./TestData/*.txt".ResolvePath(directory).ToArray();
-            var case6 = $"{directory}\\*deps*".ResolvePath(directory, SearchOption.TopDirectoryOnly).ToArray();
-            var case7 = @"TestData\sample.txt".ResolvePath(Path.GetDirectoryName(directory), SearchOption.AllDirectories).ToArray();
+            var case1 = ((Glob)"*.dll").ResolvePaths(directory).ToArray();
+            var case2 = ((Glob)"../../../Tests/*.cs").ResolvePaths(directory).ToArray();
+            var case3 = new Glob(sampleFile.Name).ResolvePaths("%TEMP%", expandVariables: true).ToArray();
+            var case4 = ((Glob)sampleFile.FullName).ResolvePaths(directory).ToArray();
+            var case5 = ((Glob)$"./TestData/*.txt").ResolvePaths(directory).ToArray();
+            var case6 = ((Glob)$"{directory}\\*deps*").ResolvePaths(directory, SearchOption.TopDirectoryOnly).ToArray();
+            var case7 = ((Glob)@"TestData\sample.txt").ResolvePaths(Path.GetDirectoryName(directory), SearchOption.AllDirectories).ToArray();
 
             if (sampleFile.Exists) sampleFile.Delete();
 
@@ -69,37 +69,32 @@ namespace Acklann.GlobN.Tests
             case6.Length.ShouldBe(1);
             case7.Length.ShouldBe(1);
 
-            Should.Throw<ArgumentNullException>(() => { err.ResolvePath().ToArray(); });
-            Should.Throw<DirectoryNotFoundException>(() => { new Glob(sampleFile.Name).ResolvePath("%TEMP%", expandVariables: false).ToArray(); });
+            Should.Throw<ArgumentNullException>(() => { err.ResolvePaths().ToArray(); });
+            Should.Throw<DirectoryNotFoundException>(() => { new Glob(sampleFile.Name).ResolvePaths("%TEMP%", expandVariables: false).ToArray(); });
         }
 
         [TestMethod]
-        public void GetFiles_should_return_a_file_list_that_match_the_pattern()
+        public void Should_resolve_files_that_match_pattern_within_a_folder()
         {
             // Arrange
             var sampleFile = new FileInfo(Path.GetTempFileName());
-            var directory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var directory = new DirectoryInfo(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
 
             // Act
-            var set1 = directory.GetFiles("*.dll").ToArray();
-            var set2 = directory.GetFiles("../../../Tests/*.cs").ToArray();
-            var set3 = "%TEMP%".GetFiles(new Glob(sampleFile.Name), expandVariables: true).ToArray();
+            var set1 = directory.ResolvePaths("*.dll").ToArray();
+            var set2 = directory.ResolvePaths("../../../Tests/*.cs").ToArray();
 
             // Assert
 
             set1.ShouldNotBeEmpty();
-            set1.ShouldAllBe(x => x.EndsWith(".dll"));
+            set1.ShouldAllBe(x => x.FullName.EndsWith(".dll"));
 
             set2.ShouldNotBeEmpty();
-            set2.ShouldAllBe(x => x.EndsWith(".cs"));
-
-            set3.ShouldContain(sampleFile.FullName);
-
-            Should.Throw<DirectoryNotFoundException>(() => { "%TEMP%".GetFiles("*.tmp", expandVariables: false).ToArray(); });
+            set2.ShouldAllBe(x => x.FullName.EndsWith(".cs"));
         }
 
         [TestMethod]
-        public void Filter_should_extract_paths_from_a_list()
+        public void Should_filter_paths_within_a_list()
         {
             // Arrange
             var sample = new string[]

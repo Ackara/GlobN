@@ -12,11 +12,11 @@ bool success = Glob.IsMatch("index.html", "index.*");
 /* returns: true */
 
 Glob pattern = "**/*.js";
-IEnumerable<string> allJsFilePaths = pattern.ResolvePath(@"C:\app\scripts\");
+IEnumerable<string> allJsFilePaths = pattern.ResolvePaths(@"C:\app\scripts\");
 /* returns: The paths of all .js files within the current directory and its sub-directories. */
 
 Glob pattern = "../../index.html";
-string fullPath = pattern.ExpandPath();
+string fullPath = pattern.Expand();
 /* returns: The full path of the specified file. */
 
 Glob pattern = "scripts/**/auth/*.ts";

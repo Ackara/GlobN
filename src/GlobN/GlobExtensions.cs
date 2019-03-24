@@ -18,12 +18,19 @@ namespace Acklann.GlobN
         /// <param name="directory">The current directory (default: <see cref="Environment.CurrentDirectory"/>).</param>
         /// <param name="expandVariables">if set to <c>true</c> expands the environment variables within the <paramref name="pattern" /> and <paramref name="directory" />.</param>
         /// <returns>A string with each variable replaced by its value.</returns>
-        public static string ExpandPath(this Glob pattern, string directory = null, bool expandVariables = false)
+        public static string Expand(this Glob pattern, string directory = null, bool expandVariables = false)
         {
-            return ExpandPath(pattern.ToString(), directory, expandVariables);
+            if (string.IsNullOrEmpty(directory)) directory = Environment.CurrentDirectory;
+            if (pattern == null) return (expandVariables ? Environment.ExpandEnvironmentVariables(directory) : directory);
+
+            int totalOperators = CountUpOperators(pattern.ToString(), out string relativePath);
+            directory = MoveUpDirectory(directory, totalOperators);
+
+            directory = Path.Combine(directory, relativePath ?? string.Empty);
+            return (expandVariables ? Environment.ExpandEnvironmentVariables(directory) : directory);
         }
 
-        /// <summary>
+         /// <summary>
         /// Returns the files from the specified directory that matches the <paramref name="pattern"/>.
         /// </summary>
         /// <param name="pattern">The glob pattern.</param>
@@ -33,7 +40,7 @@ namespace Acklann.GlobN
         /// <returns>The files that match the glob pattern from the directory.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="pattern"/> is null.</exception>
         /// <exception cref="DirectoryNotFoundException"><paramref name="directory" /> do not exist.</exception>
-        public static IEnumerable<string> ResolvePath(this Glob pattern, string directory = null, SearchOption searchOption = SearchOption.AllDirectories, bool expandVariables = false)
+        public static IEnumerable<string> ResolvePaths(this Glob pattern, string directory = null, SearchOption searchOption = SearchOption.AllDirectories, bool expandVariables = false)
         {
             if (pattern == null) throw new ArgumentNullException(nameof(pattern));
 
@@ -50,7 +57,7 @@ namespace Acklann.GlobN
             if (expandVariables) directory = Environment.ExpandEnvironmentVariables(directory);
             if (!Directory.Exists(directory)) throw new DirectoryNotFoundException($"Could not find folder at '{directory}'.");
 
-            directory = PathExtensions.MoveUpDirectory(directory, GetUpOperators(pattern, out string trimmedPattern));
+            directory = MoveUpDirectory(directory, CountUpOperators(pattern, out string trimmedPattern));
 
             foreach (string path in Directory.EnumerateFiles(directory, "*", searchOption))
                 if (pattern.IsMatch(path, expandVariables))
@@ -58,58 +65,6 @@ namespace Acklann.GlobN
                     yield return path;
                 }
         }
-
-        /* String */
-
-        /// <summary>
-        /// Expands the name of each environment variable (%variable%) and 'up directory' expression ('..\') embedded in the <see cref="Glob" />.
-        /// </summary>
-        /// <param name="relativePath">The relative path.</param>
-        /// <param name="directory">The current directory (default: <see cref="Environment.CurrentDirectory"/>).</param>
-        /// <param name="expandVariables">if set to <c>true</c> expands the environment variables within the <paramref name="relativePath" /> and <paramref name="directory" />.</param>
-        /// <returns>A string with each variable replaced by its value.</returns>
-        public static string ExpandPath(this string relativePath, string directory = null, bool expandVariables = false)
-        {
-            if (string.IsNullOrEmpty(directory)) directory = Environment.CurrentDirectory;
-
-            int totalUpOperators = GetUpOperators(relativePath, out relativePath);
-            directory = PathExtensions.MoveUpDirectory(directory, totalUpOperators);
-
-            if (expandVariables) return Environment.ExpandEnvironmentVariables(Path.Combine(directory, relativePath ?? string.Empty) ?? string.Empty);
-            else return Path.Combine(directory, relativePath ?? string.Empty);
-        }
-
-        /// <summary>
-        /// Returns the files from the specified directory that matches the <paramref name="pattern"/>.
-        /// </summary>
-        /// <param name="pattern">The glob pattern.</param>
-        /// <param name="directory">The current directory (default: <see cref="Environment.CurrentDirectory"/>).</param>
-        /// <param name="searchOption">One of the enumeration values that specifies whether the search operation should include only the current directory or should include all subdirectories. (default <see cref="SearchOption.AllDirectories"/>)</param>
-        /// <param name="expandVariables">if set to <c>true</c> expands the environment variables within the <paramref name="pattern"/> and <paramref name="directory"/>.</param>
-        /// <returns>The files that match the glob pattern from the directory.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="pattern"/> is null.</exception>
-        /// <exception cref="DirectoryNotFoundException"><paramref name="directory" /> do not exist.</exception>
-        public static IEnumerable<string> ResolvePath(this string pattern, string directory = null, SearchOption searchOption = SearchOption.AllDirectories, bool expandVariables = false)
-        {
-            return ResolvePath(new Glob(pattern), directory, searchOption, expandVariables);
-        }
-
-        /// <summary>
-        /// Returns the files from the specified directory that matches the <paramref name="pattern" />.
-        /// </summary>
-        /// <param name="directory">The current directory (default: <see cref="Environment.CurrentDirectory" />).</param>
-        /// <param name="pattern">The glob pattern.</param>
-        /// <param name="searchOption">One of the enumeration values that specifies whether the search operation should include only the current directory or should include all subdirectories. (default <see cref="SearchOption.AllDirectories"/>)</param>
-        /// <param name="expandVariables">if set to <c>true</c> expands the environment variables within the <paramref name="pattern" /> and <paramref name="directory" />.</param>
-        /// <returns>The files that match the glob pattern from the directory.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="pattern" /> is null.</exception>
-        /// <exception cref="DirectoryNotFoundException"><paramref name="directory" /> do not exist.</exception>
-        public static IEnumerable<string> GetFiles(this string directory, Glob pattern, SearchOption searchOption = SearchOption.AllDirectories, bool expandVariables = false)
-        {
-            return ResolvePath(pattern, directory, searchOption, expandVariables);
-        }
-
-        /* DirectoryInfo */
 
         /// <summary>
         /// Returns the files from the specified directory that matches the <paramref name="pattern"/>.
@@ -121,9 +76,9 @@ namespace Acklann.GlobN
         /// <returns>The files that match the glob pattern from the directory.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="pattern"/> is null.</exception>
         /// <exception cref="DirectoryNotFoundException"><paramref name="directory" /> do not exist.</exception>
-        public static IEnumerable<FileInfo> GetFiles(this DirectoryInfo directory, Glob pattern, SearchOption searchOption = SearchOption.AllDirectories, bool expandVariables = false)
+        public static IEnumerable<FileInfo> ResolvePaths(this DirectoryInfo directory, Glob pattern, SearchOption searchOption = SearchOption.AllDirectories, bool expandVariables = false)
         {
-            foreach (var filePath in ResolvePath(pattern, directory.FullName, searchOption, expandVariables))
+            foreach (string filePath in ResolvePaths(pattern, directory.FullName, searchOption, expandVariables))
             {
                 yield return new FileInfo(filePath);
             };
@@ -148,6 +103,19 @@ namespace Acklann.GlobN
 
         /* ===== */
 
+        internal static string MoveUpDirectory(this string path, in int times)
+        {
+            if (string.IsNullOrEmpty(path)) throw new ArgumentException($"{nameof(path)} cannot be null or empty.", nameof(path));
+
+            for (int i = 0; i < times; i++)
+                if (!string.IsNullOrEmpty(path))
+                {
+                    path = Path.GetDirectoryName(path);
+                }
+
+            return path;
+        }
+
         internal static bool IsaWildcard(this char character)
         {
             return character == '*' || character == '?';
@@ -158,7 +126,7 @@ namespace Acklann.GlobN
             return character == '\\' || character == '/';
         }
 
-        internal static int GetUpOperators(this string relativePath, out string trimmedPath)
+        internal static int CountUpOperators(this string relativePath, out string trimmedPath)
         {
             trimmedPath = relativePath;
             if (string.IsNullOrEmpty(relativePath)) return 0;
