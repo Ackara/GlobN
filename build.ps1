@@ -12,13 +12,13 @@ Param(
 	[string[]]$Tasks = @("default"),
 
 	[Alias('f')]
-	[string]$Filter = $null,
+	[string]$Filter = "*",
 
-    [Alias('no-commit')]
-    [switch]$SkipCommit,
+	[Alias('no-commit')]
+	[switch]$SkipCommit,
 
 	[Alias('h', '?')]
-    [switch]$Help,
+	[switch]$Help,
 
 	[Alias('d', "dry")]
 	[switch]$DryRun,
@@ -57,18 +57,18 @@ else
 	Write-Host -ForegroundColor DarkGray "User:          $([Environment]::UserName)@$([Environment]::MachineName)";
 	Write-Host -ForegroundColor DarkGray "Platform:      $([Environment]::OSVersion.Platform)";
 	Write-Host -ForegroundColor DarkGray "Branch:        $branchName";
-    Write-Host -ForegroundColor DarkGray "Configuration: $Configuration";
-    Write-Host "";
+	Write-Host -ForegroundColor DarkGray "Configuration: $Configuration";
+	Write-Host "";
 	Invoke-psake $taskFile -nologo -taskList $Tasks -properties @{
 		"Filter"=$Filter;
 		"Major"=$Major.IsPresent;
 		"Minor"=$Minor.IsPresent;
 		"DryRun"=$DryRun.IsPresent;
-        "ToolsFolder"=$toolsFolder;
+		"ToolsFolder"=$toolsFolder;
 		"CurrentBranch"=$branchName;
 		"Configuration"=$Configuration;
-        "SolutionFolder"=$PSScriptRoot;
-        "ShouldCommitChanges"=(-not $SkipCommit.IsPresent);
+		"SolutionFolder"=$PSScriptRoot;
+		"ShouldCommitChanges"=(-not $SkipCommit.IsPresent);
 	}
 	if (-not $psake.build_success) { exit 1; }
 }

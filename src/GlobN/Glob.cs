@@ -16,7 +16,7 @@ namespace Acklann.GlobN
         /// <exception cref="System.ArgumentNullException">pattern</exception>
         public Glob(string pattern)
         {
-            _pattern = pattern ?? throw new System.ArgumentNullException(nameof(pattern));
+            _pattern = pattern;
             Evaluators = new IEvaluator[4];
         }
 
