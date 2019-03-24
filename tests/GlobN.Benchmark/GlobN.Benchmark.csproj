@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -6,16 +6,6 @@
     <AssemblyName>GlobN.Benchmark</AssemblyName>
     <RootNamespace>Acklann.GlobN</RootNamespace>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="fileList.txt" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="fileList.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="benchmarkdotnet" Version="0.11.4" />
@@ -29,4 +19,11 @@
     <ProjectReference Include="..\..\src\GlobN\GlobN.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <Target Name="GenerateMockData" BeforeTargets="PostBuildEvent">
+    <Exec Command="powershell -ExecutionPolicy Bypass -NoProfile -NonInteractive -File mock.ps1 $(Configuration) $(MSBuildProjectName.Substring(0, $(MSBuildProjectName.IndexOf('.'))))" />
+  </Target>
 </Project>

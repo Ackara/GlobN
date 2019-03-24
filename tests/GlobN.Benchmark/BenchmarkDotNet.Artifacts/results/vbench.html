@@ -81,14 +81,25 @@
 
     <script id="data" type="application/json">[
   {
-    "name": "Acklann.GlobN.Benchmark.Comparison",
+    "name": "Acklann.GlobN.EvaluationTest",
     "contributions": [
       {
         "date": "2019-03-24T00:00:00-04:00",
         "wasClean": false,
         "branch": "master",
-        "sha": "fbd762aaa9973c9d2b5bbb623f5b9b6f7118e797",
-        "commitMessage": "Remove string extension methods",
+        "sha": "078dd4cc46766fb7e1a0b9adfaf2b85c287fba0d",
+        "commitMessage": "Update packages",
+        "author": "Ackara",
+        "email": null,
+        "emailMD5": null,
+        "hardwareInformation": "BenchmarkDotNet=v0.11.4, OS=Windows 10.0.17134.648 (1803/April2018Update/Redstone4)\r\nIntel Core i7-6700K CPU 4.00GHz (Skylake), 1 CPU, 8 logical and 4 physical cores\r\n.NET Core SDK=2.1.505"
+      },
+      {
+        "date": "2019-03-24T00:00:00-04:00",
+        "wasClean": false,
+        "branch": "master",
+        "sha": "078dd4cc46766fb7e1a0b9adfaf2b85c287fba0d",
+        "commitMessage": "Update packages",
         "author": "Ackara",
         "email": null,
         "emailMD5": null,
@@ -102,6 +113,11 @@
         "unitKind": 0
       },
       {
+        "name": "Pattern",
+        "isNumeric": false,
+        "unitKind": 0
+      },
+      {
         "name": "Mean",
         "isNumeric": true,
         "unitKind": 1
@@ -110,21 +126,6 @@
         "name": "Error",
         "isNumeric": true,
         "unitKind": 1
-      },
-      {
-        "name": "StdDev",
-        "isNumeric": true,
-        "unitKind": 1
-      },
-      {
-        "name": "Ratio",
-        "isNumeric": true,
-        "unitKind": 0
-      },
-      {
-        "name": "Rank",
-        "isNumeric": true,
-        "unitKind": 0
       },
       {
         "name": "Gen 0/1k Op",
@@ -149,30 +150,47 @@
     ],
     "rows": [
       [
-        "Regex",
+        "IsMatch",
+        "*.txt",
         [
           {
-            "value": 11275.6,
-            "friendlyValue": "11,275.6 us"
+            "value": 5989000.0,
+            "friendlyValue": "5.989 ms"
+          },
+          {
+            "value": 5990000.0,
+            "friendlyValue": "5.990 ms"
           }
         ],
         [
-          {
-            "value": 25.0468,
-            "friendlyValue": "25.0468 us"
-          }
+          null,
+          null
         ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      [
+        "ResovlePaths",
+        "*.txt",
         [
           {
-            "value": 23.4288,
-            "friendlyValue": "23.4288 us"
+            "value": 16302000.0,
+            "friendlyValue": "16.302 ms"
           }
-        ],
-        [
-          1.0
-        ],
-        [
-          4.0
         ],
         [
           null
@@ -184,37 +202,57 @@
           null
         ],
         [
+          null
+        ],
+        [
           {
-            "value": 22067.2,
-            "friendlyValue": "21.55 KB"
+            "value": 269616.0,
+            "friendlyValue": "269616 B"
           }
         ]
       ],
       [
-        "GlobN",
+        "IsMatch",
+        "file.txt",
         [
           {
-            "value": 576.4,
-            "friendlyValue": "576.4 us"
+            "value": 5989000.0,
+            "friendlyValue": "5.989 ms"
+          },
+          {
+            "value": 5990000.0,
+            "friendlyValue": "5.990 ms"
           }
         ],
         [
-          {
-            "value": 0.3865,
-            "friendlyValue": "0.3865 us"
-          }
+          null,
+          null
         ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      [
+        "ResovlePaths",
+        "file.txt",
         [
           {
-            "value": 0.3426,
-            "friendlyValue": "0.3426 us"
+            "value": 16302000.0,
+            "friendlyValue": "16.302 ms"
           }
-        ],
-        [
-          0.05
-        ],
-        [
-          2.0
         ],
         [
           null
@@ -226,40 +264,63 @@
           null
         ],
         [
+          null
+        ],
+        [
           {
-            "value": 1157.12,
-            "friendlyValue": "1.13 KB"
+            "value": 269616.0,
+            "friendlyValue": "269616 B"
           }
         ]
       ],
       [
-        "DotNet.Glob",
+        "IsMatch",
+        "mock/**/*.png",
         [
           {
-            "value": 547.1,
-            "friendlyValue": "547.1 us"
+            "value": 5989000.0,
+            "friendlyValue": "5.989 ms"
+          },
+          {
+            "value": 5990000.0,
+            "friendlyValue": "5.990 ms"
           }
         ],
         [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      [
+        "ResovlePaths",
+        "mock/**/*.png",
+        [
           {
-            "value": 1.2787,
-            "friendlyValue": "1.2787 us"
+            "value": 16302000.0,
+            "friendlyValue": "16.302 ms"
           }
         ],
         [
-          {
-            "value": 1.1961,
-            "friendlyValue": "1.1961 us"
-          }
+          null
         ],
         [
-          0.05
-        ],
-        [
-          1.0
-        ],
-        [
-          0.9766
+          null
         ],
         [
           null
@@ -269,39 +330,59 @@
         ],
         [
           {
-            "value": 7956.48,
-            "friendlyValue": "7.77 KB"
+            "value": 269616.0,
+            "friendlyValue": "269616 B"
           }
         ]
       ],
       [
-        "Glob",
+        "IsMatch",
+        "temp/**/file.txt",
         [
           {
-            "value": 1756.2,
-            "friendlyValue": "1,756.2 us"
+            "value": 5989000.0,
+            "friendlyValue": "5.989 ms"
+          },
+          {
+            "value": 5990000.0,
+            "friendlyValue": "5.990 ms"
           }
         ],
         [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      [
+        "ResovlePaths",
+        "temp/**/file.txt",
+        [
           {
-            "value": 1.0063,
-            "friendlyValue": "1.0063 us"
+            "value": 16302000.0,
+            "friendlyValue": "16.302 ms"
           }
         ],
         [
-          {
-            "value": 0.8403,
-            "friendlyValue": "0.8403 us"
-          }
+          null
         ],
         [
-          0.16
-        ],
-        [
-          3.0
-        ],
-        [
-          488.2813
+          null
         ],
         [
           null
@@ -311,8 +392,8 @@
         ],
         [
           {
-            "value": 2053744.64,
-            "friendlyValue": "2005.61 KB"
+            "value": 269616.0,
+            "friendlyValue": "269616 B"
           }
         ]
       ]

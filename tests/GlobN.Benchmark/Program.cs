@@ -2,7 +2,7 @@
 using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Running;
 
-namespace Acklann.GlobN.Benchmark
+namespace Acklann.GlobN
 {
     internal class Program
     {

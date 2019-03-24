@@ -9,9 +9,9 @@ namespace Acklann.GlobN.Benchmark
 {
     [MemoryDiagnoser]
     [RankColumn(BenchmarkDotNet.Mathematics.NumeralSystem.Arabic)]
-    public class Comparison
+    public class ComparisonTest
     {
-        public Comparison()
+        public ComparisonTest()
         {
             var list = new Stack<string>();
             using (var reader = new StreamReader(File.OpenRead("fileList.txt")))
