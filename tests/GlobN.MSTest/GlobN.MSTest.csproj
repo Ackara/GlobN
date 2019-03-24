@@ -5,7 +5,7 @@
 
     <IsPackable>false</IsPackable>
 
-    <AssemblyName>Acklann.GlobN.MSTest</AssemblyName>
+    <AssemblyName>GlobN.MSTest</AssemblyName>
 
     <RootNamespace>Acklann.GlobN</RootNamespace>
   </PropertyGroup>
