@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using G = Glob;
+using G = GlobExpressions;
 
 namespace Acklann.GlobN.Benchmark
 {
     [MemoryDiagnoser]
     [RankColumn(BenchmarkDotNet.Mathematics.NumeralSystem.Arabic)]
-    public class GlobComparisons
+    public class Comparison
     {
-        public GlobComparisons()
+        public Comparison()
         {
             var list = new Stack<string>();
             using (var reader = new StreamReader(File.OpenRead("fileList.txt")))
@@ -69,6 +69,7 @@ namespace Acklann.GlobN.Benchmark
             foreach (var pattern in Globs)
             {
                 var sut = DotNet.Globbing.Glob.Parse(pattern);
+
                 foreach (var path in FileList)
                 {
                     if (sut.IsMatch(path)) matches++;
