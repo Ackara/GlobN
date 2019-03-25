@@ -45,7 +45,7 @@ namespace Acklann.GlobN.Tests
 
             // Act
             var case1 = ((Glob)"*.dll").ResolvePaths(directory).ToArray();
-            var case2 = ((Glob)"../../../Tests/*.cs").ResolvePaths(directory).ToArray();
+            var case2 = ((Glob)"../*").ResolvePaths(directory).ToArray();
             var case3 = new Glob(sampleFile.Name).ResolvePaths("%TEMP%", expandVariables: true).ToArray();
             var case4 = ((Glob)sampleFile.FullName).ResolvePaths(directory).ToArray();
             var case5 = ((Glob)$"./TestData/*.txt").ResolvePaths(directory).ToArray();
@@ -59,7 +59,6 @@ namespace Acklann.GlobN.Tests
             case1.ShouldAllBe(x => x.EndsWith(".dll"));
 
             case2.ShouldNotBeEmpty();
-            case2.ShouldAllBe(x => x.EndsWith(".cs"));
 
             case3.ShouldContain(sampleFile.FullName);
 
@@ -82,15 +81,10 @@ namespace Acklann.GlobN.Tests
 
             // Act
             var set1 = directory.ResolvePaths("*.dll").ToArray();
-            var set2 = directory.ResolvePaths("../../../Tests/*.cs").ToArray();
 
             // Assert
-
             set1.ShouldNotBeEmpty();
             set1.ShouldAllBe(x => x.FullName.EndsWith(".dll"));
-
-            set2.ShouldNotBeEmpty();
-            set2.ShouldAllBe(x => x.FullName.EndsWith(".cs"));
         }
 
         [TestMethod]
