@@ -314,6 +314,264 @@
         ]
       ]
     ]
+  },
+  {
+    "name": "Acklann.GlobN.ComparisonTest",
+    "contributions": [
+      {
+        "date": "2019-03-25T00:00:00-04:00",
+        "wasClean": true,
+        "branch": "master",
+        "sha": "3bc91299c90ae2b526d4bad61ea4c8cd54ec0742",
+        "commitMessage": "Make test Lut friendly",
+        "author": "Ackara",
+        "email": null,
+        "emailMD5": null,
+        "hardwareInformation": "BenchmarkDotNet=v0.11.4, OS=Windows 10.0.17134.648 (1803/April2018Update/Redstone4)\r\nIntel Core i7-6700K CPU 4.00GHz (Skylake), 1 CPU, 8 logical and 4 physical cores\r\n.NET Core SDK=2.1.505"
+      }
+    ],
+    "columns": [
+      {
+        "name": "Method",
+        "isNumeric": false,
+        "isHidden": false,
+        "unitKind": 0
+      },
+      {
+        "name": "Job",
+        "isNumeric": false,
+        "isHidden": true,
+        "unitKind": 0
+      },
+      {
+        "name": "Mean",
+        "isNumeric": true,
+        "isHidden": false,
+        "unitKind": 1
+      },
+      {
+        "name": "Error",
+        "isNumeric": true,
+        "isHidden": false,
+        "unitKind": 1
+      },
+      {
+        "name": "StdDev",
+        "isNumeric": true,
+        "isHidden": false,
+        "unitKind": 1
+      },
+      {
+        "name": "Ratio",
+        "isNumeric": true,
+        "isHidden": false,
+        "unitKind": 0
+      },
+      {
+        "name": "Rank",
+        "isNumeric": true,
+        "isHidden": false,
+        "unitKind": 0
+      },
+      {
+        "name": "Gen 0/1k Op",
+        "isNumeric": true,
+        "isHidden": false,
+        "unitKind": 0
+      },
+      {
+        "name": "Gen 1/1k Op",
+        "isNumeric": true,
+        "isHidden": false,
+        "unitKind": 0
+      },
+      {
+        "name": "Gen 2/1k Op",
+        "isNumeric": true,
+        "isHidden": false,
+        "unitKind": 0
+      },
+      {
+        "name": "Allocated Memory/Op",
+        "isNumeric": true,
+        "isHidden": false,
+        "unitKind": 2
+      }
+    ],
+    "rows": [
+      [
+        "Regex",
+        "Default",
+        [
+          {
+            "value": 3838.09,
+            "friendlyValue": "3,838.09 us"
+          }
+        ],
+        [
+          {
+            "value": 16.0029,
+            "friendlyValue": "16.0029 us"
+          }
+        ],
+        [
+          {
+            "value": 12.494,
+            "friendlyValue": "12.4940 us"
+          }
+        ],
+        [
+          1.0
+        ],
+        [
+          4.0
+        ],
+        [
+          3.9063
+        ],
+        [
+          null
+        ],
+        [
+          null
+        ],
+        [
+          {
+            "value": 20111.36,
+            "friendlyValue": "19.64 KB"
+          }
+        ]
+      ],
+      [
+        "GlobN",
+        "Default",
+        [
+          {
+            "value": 71.41,
+            "friendlyValue": "71.41 us"
+          }
+        ],
+        [
+          {
+            "value": 0.3267,
+            "friendlyValue": "0.3267 us"
+          }
+        ],
+        [
+          {
+            "value": 0.2896,
+            "friendlyValue": "0.2896 us"
+          }
+        ],
+        [
+          0.02
+        ],
+        [
+          1.0
+        ],
+        [
+          0.2441
+        ],
+        [
+          null
+        ],
+        [
+          null
+        ],
+        [
+          {
+            "value": 1116.16,
+            "friendlyValue": "1.09 KB"
+          }
+        ]
+      ],
+      [
+        "DotNet.Glob",
+        "Default",
+        [
+          {
+            "value": 95.82,
+            "friendlyValue": "95.82 us"
+          }
+        ],
+        [
+          {
+            "value": 0.5207,
+            "friendlyValue": "0.5207 us"
+          }
+        ],
+        [
+          {
+            "value": 0.4871,
+            "friendlyValue": "0.4871 us"
+          }
+        ],
+        [
+          0.02
+        ],
+        [
+          2.0
+        ],
+        [
+          1.8311
+        ],
+        [
+          null
+        ],
+        [
+          null
+        ],
+        [
+          {
+            "value": 7956.48,
+            "friendlyValue": "7.77 KB"
+          }
+        ]
+      ],
+      [
+        "GlobExpressions",
+        "Default",
+        [
+          {
+            "value": 321.21,
+            "friendlyValue": "321.21 us"
+          }
+        ],
+        [
+          {
+            "value": 1.9904,
+            "friendlyValue": "1.9904 us"
+          }
+        ],
+        [
+          {
+            "value": 1.8619,
+            "friendlyValue": "1.8619 us"
+          }
+        ],
+        [
+          0.08
+        ],
+        [
+          3.0
+        ],
+        [
+          93.2617
+        ],
+        [
+          null
+        ],
+        [
+          null
+        ],
+        [
+          {
+            "value": 392468.48,
+            "friendlyValue": "383.27 KB"
+          }
+        ]
+      ]
+    ]
   }
 ]</script>
 

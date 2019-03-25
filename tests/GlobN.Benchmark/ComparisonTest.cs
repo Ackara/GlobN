@@ -13,22 +13,6 @@ namespace Acklann.GlobN
         private readonly string[] _regex = new string[] { ".+", @".+\.png", "purus/.+", @"sed/.+/felis\.html", "nullam/sit/amet/turpis/elementum/ligula/vehicula.jsp" };
         private readonly string[] _glob = new string[] { "**/*", "**/*.png", "**/purus/**/*", "/sed/**/*/felis.html", "nullam/sit/amet/turpis/elementum/ligula/vehicula.jsp" };
 
-        [Benchmark(Baseline = true)]
-        public int Regex()
-        {
-            int matches = 0;
-            foreach (var pattern in _regex)
-            {
-                var sut = new Regex(pattern, RegexOptions.Compiled);
-                foreach (var path in _fileList)
-                {
-                    if (sut.IsMatch(path)) matches++;
-                }
-            }
-
-            return matches;
-        }
-
         [Benchmark]
         public int GlobN()
         {
@@ -69,6 +53,22 @@ namespace Acklann.GlobN
             foreach (var pattern in _glob)
             {
                 var sut = new GE.Glob(pattern, GE.GlobOptions.Compiled);
+                foreach (var path in _fileList)
+                {
+                    if (sut.IsMatch(path)) matches++;
+                }
+            }
+
+            return matches;
+        }
+
+        [Benchmark(Baseline = true)]
+        public int Regex()
+        {
+            int matches = 0;
+            foreach (var pattern in _regex)
+            {
+                var sut = new Regex(pattern, RegexOptions.Compiled);
                 foreach (var path in _fileList)
                 {
                     if (sut.IsMatch(path)) matches++;
