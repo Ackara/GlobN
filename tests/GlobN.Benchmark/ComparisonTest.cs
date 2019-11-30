@@ -1,26 +1,59 @@
 ﻿using BenchmarkDotNet.Attributes;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using GE = GlobExpressions;
+using G = GlobExpressions;
 
-namespace Acklann.GlobN
+namespace Acklann.GlobN.Benchmark
 {
     [MemoryDiagnoser]
     [RankColumn(BenchmarkDotNet.Mathematics.NumeralSystem.Arabic)]
     public class ComparisonTest
     {
-        private readonly string[] _fileList = Mock.GetFileList().Take(100).ToArray();
-        private readonly string[] _regex = new string[] { ".+", @".+\.png", "purus/.+", @"sed/.+/felis\.html", "nullam/sit/amet/turpis/elementum/ligula/vehicula.jsp" };
-        private readonly string[] _glob = new string[] { "**/*", "**/*.png", "**/purus/**/*", "/sed/**/*/felis.html", "nullam/sit/amet/turpis/elementum/ligula/vehicula.jsp" };
+        public ComparisonTest()
+        {
+            var list = new Stack<string>();
+            using (var reader = new StreamReader(File.OpenRead("fileList.txt")))
+            {
+                while (!reader.EndOfStream)
+                {
+                    string path = reader.ReadLine().Trim();
+                    if (!string.IsNullOrEmpty(path)) list.Push(path);
+                }
+            }
+
+            FileList = list.ToArray();
+            Globs = Patterns().Select(x => x.Glob).ToArray();
+            RegexExp = Patterns().Select(x => x.Regex).ToArray();
+        }
+
+        public readonly string[] FileList, Globs, RegexExp;
+
+        [Benchmark(Baseline = true)]
+        public int Regex()
+        {
+            int matches = 0;
+            foreach (var pattern in RegexExp)
+            {
+                var sut = new Regex(pattern, RegexOptions.Compiled);
+                foreach (var path in FileList)
+                {
+                    if (sut.IsMatch(path)) matches++;
+                }
+            }
+
+            return matches;
+        }
 
         [Benchmark]
         public int GlobN()
         {
             int matches = 0;
-            foreach (var pattern in _glob)
+            foreach (var pattern in Globs)
             {
                 var sut = new GlobN.Glob(pattern);
-                foreach (var path in _fileList)
+                foreach (var path in FileList)
                 {
                     if (sut.IsMatch(path)) matches++;
                 }
@@ -33,11 +66,11 @@ namespace Acklann.GlobN
         public int DotNetGlob()
         {
             int matches = 0;
-            foreach (var pattern in _glob)
+            foreach (var pattern in Globs)
             {
                 var sut = DotNet.Globbing.Glob.Parse(pattern);
 
-                foreach (var path in _fileList)
+                foreach (var path in FileList)
                 {
                     if (sut.IsMatch(path)) matches++;
                 }
@@ -46,14 +79,14 @@ namespace Acklann.GlobN
             return matches;
         }
 
-        [Benchmark]
-        public int GlobExpressions()
+        [Benchmark(Description = "Glob")]
+        public int GlobGlob()
         {
             int matches = 0;
-            foreach (var pattern in _glob)
+            foreach (var pattern in Globs)
             {
-                var sut = new GE.Glob(pattern, GE.GlobOptions.Compiled);
-                foreach (var path in _fileList)
+                var sut = new G.Glob(pattern, G.GlobOptions.Compiled);
+                foreach (var path in FileList)
                 {
                     if (sut.IsMatch(path)) matches++;
                 }
@@ -62,20 +95,16 @@ namespace Acklann.GlobN
             return matches;
         }
 
-        [Benchmark(Baseline = true)]
-        public int Regex()
+        private static (string Glob, string Regex)[] Patterns()
         {
-            int matches = 0;
-            foreach (var pattern in _regex)
+            return new (string, string)[]
             {
-                var sut = new Regex(pattern, RegexOptions.Compiled);
-                foreach (var path in _fileList)
-                {
-                    if (sut.IsMatch(path)) matches++;
-                }
-            }
-
-            return matches;
+                ("**/*", ".+"),
+                ("**/*.png", @".+\.png"),
+                ("**/purus/**/*", "purus/.+"),
+                ("/sed/**/*/felis.html", @"sed/.+/felis\.html"),
+                ("nullam/sit/amet/turpis/elementum/ligula/vehicula.jsp", "nullam/sit/amet/turpis/elementum/ligula/vehicula.jsp")
+            };
         }
     }
 }
