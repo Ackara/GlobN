@@ -29,13 +29,26 @@ namespace Acklann.GlobN
             if (string.IsNullOrEmpty(pattern) || pattern == "*") return true;
             if (string.IsNullOrEmpty(path)) return false;
 
+            bool matchNotFound;
             var context = new Context(path, pattern);
 
             do
             {
-                Evaluator.ChangeState(context);
-                Evaluator.Evaluate(context);
-                
+#if DEBUG
+                context.WriteLines();
+#endif
+                SetState(context);
+                Evaluate(context);
+                Increment(context);
+
+                if (context.State == Status.Failed || context.State == Status.Illegal)
+                    return false;
+                else if (!context.AtEndOfValue && context.AtEndOfPattern)
+                    return false;
+                else if (context.AtEndOfValue && !context.AtEndOfPattern)
+                    return false;
+                else if (context.AtEndOfPattern)
+                    return true;
             } while (true);
         }
 
@@ -51,13 +64,63 @@ namespace Acklann.GlobN
         /// Returns a <see cref="System.String" /> that represents this instance.
         /// </summary>
         /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
-        public override string ToString()
+        public override string ToString() => _pattern;
+
+        internal static void SetState(Context context)
         {
-            return _pattern;
+            switch (context.PatternAt())
+            {
+                case Context.wildcard:
+                    if (context.PatternAt(1) == Context.wildcard)
+                    {
+                        context.State = Status.DirectoryWildcard;
+                    }
+                    else
+                    {
+                        context.State = Status.Wildcard;
+                    }
+                    break;
+
+                default:
+                    context.State = Status.Literal;
+                    break;
+            }
         }
 
-        
-        
+        internal static void Evaluate(Context context)
+        {
+            switch (context.State)
+            {
+                default:
+                case Status.Literal:
+                    LiteralEvaluator.Evaluate(context);
+                    break;
+
+                case Status.Wildcard:
+
+                    break;
+
+                case Status.DirectoryWildcard:
+                    break;
+            }
+        }
+
+        internal static void Increment(Context context)
+        {
+            switch (context.State)
+            {
+                default:
+                case Status.Literal:
+                    LiteralEvaluator.Move(context);
+                    break;
+
+                case Status.Wildcard:
+                    break;
+
+                case Status.DirectoryWildcard:
+                    break;
+            }
+        }
 
         #region IEquatable
 

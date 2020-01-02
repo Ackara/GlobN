@@ -1,6 +1,6 @@
 namespace Acklann.GlobN.Evaluation
 {
-    internal class Evaluator
+    internal class LiteralEvaluator
     {
         private const char wildcard = '*';
 
@@ -29,18 +29,31 @@ namespace Acklann.GlobN.Evaluation
 
         public static void Evaluate(Context context)
         {
+            bool charMatched;
+
             switch (context.State)
             {
                 case Status.Literal:
-
+                    charMatched = Equals(context.PatternAt(), context.ValueAt());
                     break;
+
                 case Status.Wildcard:
-
                     break;
-                case Status.DirectoryWildcard:
 
+                case Status.DirectoryWildcard:
                     break;
             }
+        }
+
+        public static bool Equals(char p, char v)
+        {
+            if ((p == '/' && v == '\\') || (p == '\\' && v == '/')) return true;
+            else return char.ToUpperInvariant(p) == char.ToUpperInvariant(v);
+        }
+
+        internal static void Move(Context context)
+        {
+            context.Step();
         }
     }
 }

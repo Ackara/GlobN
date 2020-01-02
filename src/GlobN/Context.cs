@@ -1,3 +1,6 @@
+using System;
+using System.Linq;
+
 namespace Acklann.GlobN
 {
     internal class Context
@@ -11,9 +14,10 @@ namespace Acklann.GlobN
             P = pattern.Length - 1;
         }
 
-        public int V, P;
+        public const char wildcard = '*';
         public string Value, Pattern;
         public Status State;
+        public int V, P;
 
         public bool AtEndOfPattern
         {
@@ -51,6 +55,44 @@ namespace Acklann.GlobN
 
             steps = P - steps;
             return (steps < 0 ? '\0' : Pattern[steps]);
+        }
+
+        internal void WriteLines()
+        {
+            int len = (Value.Length > Pattern.Length ? Value.Length : Pattern.Length);
+            string positions = string.Join(" ", Enumerable.Range(0, len).Select(x => $"{x}".PadLeft(2, ' ')));
+
+            int idx(int x) => (Math.Abs(Value.Length - Pattern.Length) + x);
+
+            void foo(int x, string c)
+            {
+                string[] s = Enumerable.Repeat(" ", len).ToArray();
+                s[Math.Abs(Pattern.Length - Value.Length) + x] = c;
+                write(string.Join(" ", s.Select(x => x.PadLeft(2, ' '))));
+            }
+
+
+            static void write(string x = default)
+            {
+                System.Console.WriteLine(x);
+                System.Diagnostics.Debug.WriteLine(x);
+            }
+
+
+            write(string.Join(" ", Value.Select(x => $" {x}")));
+            write(string.Join(" ", Pattern.Select(x => $" {x}")).PadLeft(positions.Length, '-'));
+            write(positions);
+
+
+            string[] spaces = Enumerable.Repeat(" ", len).ToArray();
+            spaces[Math.Abs(Pattern.Length - Value.Length) + P] = "p";
+            write(string.Join(" ", spaces.Select(x => x.PadLeft(2, ' '))));
+
+            spaces = Enumerable.Repeat(" ", len).ToArray();
+            spaces[V] = "v";
+            write(string.Join(" ", spaces.Select(x => x.PadLeft(2, ' '))));
+
+            write("\r\n");
         }
     }
 }
