@@ -5,6 +5,8 @@ Changes:
 	* Remove string extension methods.
 	* Assigning null no longer throws an exception.
 
+
+
 version 2.1.2
 -------------
 Fixes:

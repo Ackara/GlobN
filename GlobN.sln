@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2010
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GlobN", "src\GlobN\GlobN.csproj", "{59109623-C66D-4AEE-A2AB-DDAC28152C2D}"
 EndProject
@@ -10,8 +10,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".misc", ".misc", "{B276A217-B4E4-4419-BB16-3286EB949851}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
+		changelog.md = changelog.md
 		README.md = README.md
-		releaseNotes.txt = releaseNotes.txt
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GlobN.MSTest", "tests\GlobN.MSTest\GlobN.MSTest.csproj", "{DC911827-8847-48C3-9412-E00DD7DE8FB9}"

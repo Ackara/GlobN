@@ -57,10 +57,10 @@ namespace Acklann.GlobN
             if (expandVariables) directory = Environment.ExpandEnvironmentVariables(directory);
             if (!Directory.Exists(directory)) throw new DirectoryNotFoundException($"Could not find folder at '{directory}'.");
 
-            directory = MoveUpDirectory(directory, CountUpOperators(pattern, out string trimmedPattern));
+            directory = MoveUpDirectory(directory, CountUpOperators((string)pattern, out string trimmedPattern));
 
             foreach (string path in Directory.EnumerateFiles(directory, "*", searchOption))
-                if (pattern.IsMatch(path, expandVariables))
+                if (pattern.IsMatch(path))
                 {
                     yield return path;
                 }
